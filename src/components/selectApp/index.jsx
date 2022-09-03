@@ -1,27 +1,22 @@
-import {FormControl, InputLabel, MenuItem, Select} from '@mui/material';
-import {Controller} from 'react-hook-form';
+import {MenuItem, TextField} from '@mui/material';
 
-export function SelectApp({ label, control, name, options, props }) {
-  const labelId = `${name}-label`;
+export function SelectApp({ label, options, error, errorMessage, register, name, props }) {
   return (
-      <FormControl fullWidth>
-        <InputLabel id={labelId}>{label}</InputLabel>
-        <Controller
-            name={name}
-            control={control}
-            defaultValue={null}
-            {...props}
-            render={({ field, ...props }) => {
-              return (
-                  <Select
-                      labelId={labelId}
-                      label={label}
-                  >
-                    {options.map((option) => <MenuItem key={option.value} value={10}>{option.label}</MenuItem>)}
-                  </Select>
-              );
-            }}
-        />
-      </FormControl>
+      <TextField
+          select
+          fullWidth
+          label={label}
+          defaultValue=''
+          inputProps={register(name)}
+          error={error}
+          helperText={errorMessage}
+          {...props}
+      >
+        {options.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+        ))}
+      </TextField>
   );
 }
