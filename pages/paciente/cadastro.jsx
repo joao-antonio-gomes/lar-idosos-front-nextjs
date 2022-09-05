@@ -1,5 +1,4 @@
-import {Button, Container, TextField, Typography} from '@mui/material';
-import InputMask from 'react-input-mask';
+import {Container, Typography} from '@mui/material';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -9,10 +8,7 @@ import {useEffect, useState} from 'react';
 import UserService from '../../src/service/UserService';
 import {useSnackbar} from '../../src/context/snackbar';
 import {useRouter} from 'next/router';
-import {SelectApp} from '../../src/components/selectApp';
-import {DatePickerApp} from '../../src/components/datePickerApp';
-import {InputText} from '../../src/components/inputText';
-import {InputMaskApp} from '../../src/components/inputMaskApp';
+import {PatientForm} from '../../src/components/patientForm';
 
 function PacienteCadastro() {
   const [genderList, setGenderList] = useState(null);
@@ -55,8 +51,6 @@ function PacienteCadastro() {
   });
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    return;
     PatientService.create(data)
         .then((response) => {
           snackbar.showSnackBar('Paciente cadastrado com sucesso', 'success');
@@ -77,56 +71,12 @@ function PacienteCadastro() {
           Cadastro de Paciente
         </Typography>
         {isLoaded &&
-            <form onSubmit={onSubmit}>
-              <div className={'md:flex w-full'}>
-                <div className={'mb-5 w-full md:mr-2.5'}>
-                  <InputText name={'name'}
-                             register={register}
-                             label={'Nome'}
-                             error={errors.name}
-                             errorMessage={errors.name?.message} />
-                </div>
-                <div className={'mb-5 w-full md:ml-2.5'}>
-                  <InputMaskApp mask={'999.999.999-99'}
-                                label='CPF'
-                                name={'cpf'}
-                                register={register}
-                                error={errors.cpf}
-                                errorMessage={errors.cpf?.message} />
-                </div>
-                <div className={'mb-5 w-full md:ml-2.5'}>
-                  <SelectApp label={'Gênero'}
-                             options={genderList}
-                             register={register}
-                             name={'gender'}
-                             error={errors.gender}
-                             errorMessage={errors.gender?.message}
-                             {...register('gender')} />
-                </div>
-              </div>
-              <div className={'md:flex w-full'}>
-                <div className={'mb-5 w-full md:mr-2.5'}>
-                  <DatePickerApp minDate={minDate}
-                                 maxDate={maxDate}
-                                 name={'birthDate'}
-                                 label={'Nascimento'}
-                                 register={register}
-                                 control={control}
-                                 error={errors.birthDate}
-                                 errorMessage={errors.birthDate?.message} />
-                </div>
-                <div className={'mb-5 w-full md:ml-2.5'}>
-                  <InputMaskApp mask={'(99) 9 9999-9999'}
-                                error={errors.phone}
-                                label='Celular'
-                                name={'phone'}
-                                register={register}
-                                errorMessage={errors.phone?.message} />
-                </div>
-              </div>
-
-              <Button variant='contained' type={'submit'}>Cadastrar</Button>
-            </form>
+            <PatientForm genderList={genderList} useForm={{
+              register,
+              handleSubmit,
+              control,
+              formState: { errors },
+            }} onSubmit={onSubmit} />
         }
       </Container>
   );

@@ -5,16 +5,13 @@ import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import {Controller} from 'react-hook-form';
 import dayjs from 'dayjs';
 
-export function DatePickerApp({ label, control, name, minDate, maxDate, error, errorMessage, register }) {
+export function DatePickerApp({ label, control, name, minDate, maxDate, errorMessage, error }) {
   return (
       <>
         <Controller name={name}
                     control={control}
-                    defaultValue={null}
-                    render={({
-                               field: { onChange, value },
-                               fieldState: { error, invalid },
-                             }) => {
+                    defaultValue={''}
+                    render={({field: { onChange, value }, fieldState: { error }}) => {
                       return (
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
@@ -32,8 +29,8 @@ export function DatePickerApp({ label, control, name, minDate, maxDate, error, e
                                     onChange(dayjs(value))
                                 }
                                 renderInput={(params) => <TextField {...params}
-                                                                    error={error}
-                                                                    helperText={errorMessage} />}
+                                                                    error={!!error}
+                                                                    helperText={error ? error.message : null} />}
                             />
                           </LocalizationProvider>
                       );
