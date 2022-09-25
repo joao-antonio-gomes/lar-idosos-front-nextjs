@@ -11,7 +11,6 @@ export function SelectApp({ label, control, options, name }) {
                             select
                             fullWidth
                             label={label}
-                            defaultValue=''
                             {...field}
                             error={!!error}
                             helperText={error ? error.message : null}

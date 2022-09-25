@@ -33,6 +33,7 @@ export const PatientForm = ({ onSubmit, useForm, genderList }) => {
             <SelectApp label={'Gênero'}
                        name={'gender'}
                        options={genderList}
+                       register={register}
                        control={control} />
           </div>
         </div>

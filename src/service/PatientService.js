@@ -16,6 +16,10 @@ class PatientService {
   static patch(data) {
     return api.patch(`/patient/`, data);
   }
+
+  static delete(patientId) {
+    return api.delete(`/patient/${patientId}`);
+  }
 }
 
 export default PatientService;

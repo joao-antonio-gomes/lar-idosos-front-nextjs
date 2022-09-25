@@ -1,16 +1,20 @@
 import moment from 'moment/moment';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import PatientService from '../../src/service/PatientService';
 import {TableApp} from '../../src/components/tableApp';
 import {Button, Container} from '@mui/material';
 import Link from 'next/link';
+import ConfirmDialog from '../../src/components/confirmDialog';
+import {useSnackbar} from '../../src/context/snackbar';
 
 function PacienteListagem() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [patients, setPatients] = useState(null);
+  const [patients, setPatients] = useState();
+  const [openModalDeletePatient, setOpenModalDeletePatient] = useState(false);
+  const [patientToDelete, setPatientToDelete] = useState();
   const columns = [
     { field: 'id', headerName: 'ID', width: 70, sortable: false },
-    { field: 'name', headerName: 'Nome', width: 160, sortable: false, styleRow: {textAlign: 'left'}},
+    { field: 'name', headerName: 'Nome', width: 160, sortable: false, styleRow: { textAlign: 'left' } },
     {
       field: 'age',
       headerName: 'Idade',
@@ -44,26 +48,60 @@ function PacienteListagem() {
                         color={'success'}>Editar</Button>
               </Link>
               <Button variant='contained' size={'small'} style={{ fontWeight: 'bold' }}
+                      onClick={() => handleOpenModalDeletePatient(patient)}
                       color={'error'}>Excluir</Button>
             </div>
         );
       },
     },
   ];
+  const snackbar = useSnackbar();
+
+  const handleOpenModalDeletePatient = (patient) => {
+    setOpenModalDeletePatient(true);
+    setPatientToDelete(patient);
+  };
+
+  const handleDeletePatient = (patient) => {
+    PatientService.delete(patient.id)
+        .then((response) => {
+          snackbar.showSnackBar('Paciente excluído com sucesso', 'success');
+          fetchData();
+        })
+        .catch(({ response }) => {
+          if (response.data.message) {
+            snackbar.showSnackBar(response.data.message, 'error');
+            return;
+          }
+          snackbar.showSnackBar('Houve um erro ao excluir o paciente, atualize a página e tente novamente', 'error');
+        })
+        .finally(() => {
+          setOpenModalDeletePatient(false);
+        });
+  };
+
+  const fetchData = useCallback(
+      () => {
+        console.log('chamou');
+        PatientService.getAll()
+            .then(({ data }) => {
+              data = data.map(patient => {
+                patient.age = moment().diff(patient.birthDate, 'years');
+                return patient;
+              });
+              setPatients(data);
+            });
+      },
+      [],
+  );
 
   useEffect(() => {
-    PatientService.getAll()
-        .then(({ data }) => {
-          data = data.map(patient => {
-            patient.age = moment().diff(patient.birthDate, 'years');
-            return patient;
-          });
-          setPatients(data);
-        });
+    fetchData();
   }, []);
 
+
   useEffect(() => {
-    if (patients === null) return;
+    if (!patients) return;
     setIsLoaded(true);
   }, [patients]);
 
@@ -74,6 +112,11 @@ function PacienteListagem() {
           <Button variant='contained' style={{ marginBottom: 20 }}>Novo Paciente</Button>
         </Link>
         {isLoaded && <TableApp columns={columns} rows={patients} />}
+        {openModalDeletePatient && <ConfirmDialog textButtonAgree={'Sim'} textButtonCancel={'Cancelar'}
+                                                  dialogTitle={`Você deseja excluir o paciente ${patientToDelete.name}?`}
+                                                  dialogText={'Essa ação é irreversível e irá excluir todos os dados do paciente na clínica.'}
+                                                  handleAgree={() => handleDeletePatient(patientToDelete)}
+                                                  handleClose={() => setOpenModalDeletePatient(false)} />}
       </Container>
   );
 }
