@@ -2,7 +2,7 @@ import moment from 'moment/moment';
 import {useCallback, useEffect, useState} from 'react';
 import PatientService from '../../src/service/PatientService';
 import {TableApp} from '../../src/components/tableApp';
-import {Button, Container} from '@mui/material';
+import {Button, Container, TextField} from '@mui/material';
 import Link from 'next/link';
 import ConfirmDialog from '../../src/components/confirmDialog';
 import {useSnackbar} from '../../src/context/snackbar';
@@ -12,6 +12,7 @@ function PacienteListagem() {
   const [patients, setPatients] = useState();
   const [openModalDeletePatient, setOpenModalDeletePatient] = useState(false);
   const [patientToDelete, setPatientToDelete] = useState();
+  const [patientFilter, setPatientFilter] = useState({ page: 0, itemsPerPage: 10, name: null });
   const columns = [
     { field: 'id', headerName: 'ID', width: 70, sortable: false },
     { field: 'name', headerName: 'Nome', width: 160, sortable: false, styleRow: { textAlign: 'left' } },
@@ -82,22 +83,35 @@ function PacienteListagem() {
 
   const fetchData = useCallback(
       () => {
-        console.log('chamou');
-        PatientService.getAll()
+        PatientService.getAll(patientFilter)
             .then(({ data }) => {
-              data = data.map(patient => {
+              const patientsData = data.result.map(patient => {
                 patient.age = moment().diff(patient.birthDate, 'years');
                 return patient;
               });
-              setPatients(data);
+              setPatients({ ...data, result: patientsData });
             });
       },
-      [],
+      [patientFilter],
   );
+
+  let delayTimer;
+  const handleChangeSearchPatient = (e) => {
+    clearTimeout(delayTimer);
+    delayTimer = setTimeout(function () {
+      setPatientFilter({ ...patientFilter, name: e.target.value });
+    }, 700);
+  };
+
+  const handlePageChange = (e, newPage) => {
+    console.log('chamado');
+    console.log(newPage);
+    setPatientFilter({ ...patientFilter, page: newPage });
+  };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [patientFilter]);
 
 
   useEffect(() => {
@@ -111,7 +125,11 @@ function PacienteListagem() {
         <Link href={'/paciente/cadastro'}>
           <Button variant='contained' style={{ marginBottom: 20 }}>Novo Paciente</Button>
         </Link>
-        {isLoaded && <TableApp columns={columns} rows={patients} />}
+        <div style={{ margin: '10px 0 20px', display: 'flex', width: '100%' }}>
+          <TextField fullWidth={'100%'} variant={'standard'} label={'Digite um nome para filtrar'}
+                     onChange={(e) => handleChangeSearchPatient(e)} />
+        </div>
+        {isLoaded && <TableApp columns={columns} {...patients} handlePageChange={handlePageChange} />}
         {openModalDeletePatient && <ConfirmDialog textButtonAgree={'Sim'} textButtonCancel={'Cancelar'}
                                                   dialogTitle={`Você deseja excluir o paciente ${patientToDelete.name}?`}
                                                   dialogText={'Essa ação é irreversível e irá excluir todos os dados do paciente na clínica.'}

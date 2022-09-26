@@ -1,8 +1,8 @@
 import {api} from './api';
 
 class PatientService {
-  static getAll() {
-    return api.get('/patient');
+  static getAll(params) {
+    return api.get('/patient', { params: { ...params } });
   }
 
   static getById(patientId) {
