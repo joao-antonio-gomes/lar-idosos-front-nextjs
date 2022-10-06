@@ -1,4 +1,3 @@
-import MiniDrawer from '../src/components/menu';
 
 export default function Home() {
   return (

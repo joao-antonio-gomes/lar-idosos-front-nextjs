@@ -5,7 +5,7 @@ import {DatePickerApp} from '../datePickerApp';
 import {Button} from '@mui/material';
 import dayjs from 'dayjs';
 
-export const PatientForm = ({ onSubmit, useForm, genderList }) => {
+export const FormPatient = ({ onSubmit, useForm, genderList }) => {
   const minDate = dayjs().subtract(60, 'years');
   const maxDate = dayjs().subtract(110, 'years');
 

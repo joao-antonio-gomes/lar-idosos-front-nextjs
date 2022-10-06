@@ -1,11 +1,12 @@
 import moment from 'moment/moment';
-import {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import PatientService from '../../src/service/PatientService';
 import {TableApp} from '../../src/components/tableApp';
 import {Button, Container, TextField} from '@mui/material';
 import Link from 'next/link';
 import ConfirmDialog from '../../src/components/confirmDialog';
 import {useSnackbar} from '../../src/context/snackbar';
+import Typography from '@mui/material/Typography';
 
 function PacienteListagem() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -44,6 +45,10 @@ function PacienteListagem() {
       valueGetter: (patient) => {
         return (
             <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+              <Link href={'/paciente/' + patient.id}>
+                <Button variant='contained' size={'small'} style={{ fontWeight: 'bold' }}
+                        color={'info'}>Perfil</Button>
+              </Link>
               <Link href={'/paciente/edicao/' + patient.id}>
                 <Button variant='contained' size={'small'} style={{ fontWeight: 'bold' }}
                         color={'success'}>Editar</Button>
@@ -122,6 +127,7 @@ function PacienteListagem() {
 
   return (
       <Container>
+        <Typography marginBottom={5} textAlign='center' fontSize={40} variant='h3'>Pacientes</Typography>
         <Link href={'/paciente/cadastro'}>
           <Button variant='contained' style={{ marginBottom: 20 }}>Novo Paciente</Button>
         </Link>
@@ -129,7 +135,7 @@ function PacienteListagem() {
           <TextField fullWidth={'100%'} variant={'standard'} label={'Digite um nome para filtrar'}
                      onChange={(e) => handleChangeSearchPatient(e)} />
         </div>
-        {isLoaded && <TableApp columns={columns} {...patients} handlePageChange={handlePageChange} />}
+        {isLoaded && <TableApp columns={columns} {...patients} handlePageChange={handlePageChange} noContentText='Não foi encontrado nenhum paciente.' />}
         {openModalDeletePatient && <ConfirmDialog textButtonAgree={'Sim'} textButtonCancel={'Cancelar'}
                                                   dialogTitle={`Você deseja excluir o paciente ${patientToDelete.name}?`}
                                                   dialogText={'Essa ação é irreversível e irá excluir todos os dados do paciente na clínica.'}

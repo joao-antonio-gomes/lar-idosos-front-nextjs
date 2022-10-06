@@ -8,6 +8,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
+    "@fontsource/roboto": "^4.5.8",
     "@fortawesome/fontawesome-common-types": "^6.1.2",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
@@ -20,6 +21,7 @@
     "@mui/x-date-pickers": "^5.0.0-beta.7",
     "axios": "^0.27.2",
     "dayjs": "^1.11.5",
+    "material-ui-popup-state": "^4.1.0",
     "moment": "^2.29.4",
     "next": "latest",
     "next-transpile-modules": "^9.0.0",

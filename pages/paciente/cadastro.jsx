@@ -8,7 +8,7 @@ import {useEffect, useState} from 'react';
 import UserService from '../../src/service/UserService';
 import {useSnackbar} from '../../src/context/snackbar';
 import {useRouter} from 'next/router';
-import {PatientForm} from '../../src/components/patientForm';
+import {FormPatient} from '../../src/components/formPatient';
 
 function PacienteCadastro() {
   const [genderList, setGenderList] = useState(null);
@@ -71,7 +71,7 @@ function PacienteCadastro() {
           Cadastro de Paciente
         </Typography>
         {isLoaded &&
-            <PatientForm genderList={genderList} useForm={{
+            <FormPatient genderList={genderList} useForm={{
               register,
               handleSubmit,
               control,

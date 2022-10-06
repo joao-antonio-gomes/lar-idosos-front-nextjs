@@ -1,12 +1,13 @@
 import {createContext, useContext, useState} from 'react';
-import {Alert, Snackbar} from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 const SnackbarContext = createContext({});
 
 const SnackbarProvider = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
-  const [typeColor, setTypeColor] = useState('info');
+  const [typeColor, setTypeColor] = useState();
 
   const showSnackBar = (text, color) => {
     setMessage(text);
@@ -16,7 +17,6 @@ const SnackbarProvider = ({ children }) => {
 
   const handleClose = () => {
     setOpen(false);
-    setTypeColor('info');
   };
 
   return (
@@ -26,9 +26,9 @@ const SnackbarProvider = ({ children }) => {
             autoHideDuration={6000}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             onClose={handleClose}>
-          <Alert onClose={handleClose} severity={typeColor}>
+          <MuiAlert onClose={handleClose} severity={typeColor} elevation={6} variant={"filled"}>
             {message}
-          </Alert>
+          </MuiAlert>
         </Snackbar>
         {children}
       </SnackbarContext.Provider>

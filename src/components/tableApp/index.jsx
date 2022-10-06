@@ -1,6 +1,6 @@
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from '@mui/material';
 
-export function TableApp({ result, columns, handlePageChange, count, offset }) {
+export function TableApp({ result, columns, handlePageChange, count, offset, noContentText }) {
   function findColumnByField(field) {
     return columns.filter((column) => column.field === field)[0];
   }
@@ -31,7 +31,7 @@ export function TableApp({ result, columns, handlePageChange, count, offset }) {
               {result.length < 1 ?
                   <TableRow>
                     <TableCell colSpan={6}>
-                      Não foi encontrado nenhum paciente.
+                      {noContentText}
                     </TableCell>
                   </TableRow>
                   :
@@ -42,7 +42,14 @@ export function TableApp({ result, columns, handlePageChange, count, offset }) {
                         {columnsArray.map((column, idx) => {
                           return (
                               <TableCell key={row[column] + '-' + column + '-' + idx}
-                                         style={{ textAlign: 'center', ...findColumnByField(column).styleRow }}>
+                                         style={{
+                                           textAlign: 'center',
+                                           maxWidth: 200, // percentage also works
+                                           whiteSpace: 'nowrap',
+                                           overflow: 'hidden',
+                                           textOverflow: 'ellipsis',
+                                           ...findColumnByField(column).styleRow,
+                                         }}>
                                 {findColumnByField(column).valueGetter ? findColumnByField(column).valueGetter(row) : row[column]}
                               </TableCell>
                           );

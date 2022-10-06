@@ -8,7 +8,7 @@ import UserService from '../../../src/service/UserService';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import {PatientForm} from '../../../src/components/patientForm';
+import {FormPatient} from '../../../src/components/formPatient';
 
 function PacienteEdicao() {
   const minDate = dayjs().subtract(60, 'years');
@@ -85,7 +85,7 @@ function PacienteEdicao() {
           Edição de Paciente
         </Typography>
         {isLoaded &&
-            <PatientForm genderList={genderList} useForm={{
+            <FormPatient genderList={genderList} useForm={{
               register,
               handleSubmit,
               control,

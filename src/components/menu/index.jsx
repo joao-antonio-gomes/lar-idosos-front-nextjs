@@ -142,7 +142,7 @@ export default function MiniDrawer({ children }) {
                     >
                       <ListItemIcon
                           sx={{
-                            minWidth: 0,
+                            width: 20,
                             mr: open ? 3 : 'auto',
                             justifyContent: 'center',
                           }}
