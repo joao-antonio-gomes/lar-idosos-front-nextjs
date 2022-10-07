@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export function Pages({ Component, pageProps }) {
+export default function Pages({ Component, pageProps }) {
   return (
       <>
         <Component {...pageProps} />
