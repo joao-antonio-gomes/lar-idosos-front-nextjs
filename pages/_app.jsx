@@ -6,7 +6,7 @@ import 'tailwindcss/tailwind.css';
 import '../public/styles/global.css';
 import MiniDrawer from '../src/components/menu';
 import {SnackbarProvider} from '../src/context/snackbar';
-import Pages from './pages';
+import Pages from '../src/components/pages';
 
 function MyApp({ Component, pageProps }) {
   return (
