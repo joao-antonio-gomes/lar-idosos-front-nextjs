@@ -7,7 +7,7 @@ export default function AutocompleteApp({ options, control, name, defaultValue =
   return (<Controller name={name}
                       control={control}
                       defaultValue={defaultValue}
-                      render={({ field: { value, ref, onChange, ...field } }) => {
+                      render={({fieldState: { error }, field: { value, ref, onChange, ...field } }) => {
                         return (<Autocomplete
                             onChange={(e, data) => onChange(data)}
                             id='multiple-limit-tags'
@@ -18,8 +18,8 @@ export default function AutocompleteApp({ options, control, name, defaultValue =
                                                 {...field}
                                                 inputRef={ref}
                                                 label={label}
-                                                error={!!errors[name]}
-                                                helperText={errors[name] ? errors[name].message : null}
+                                                error={!!error}
+                                                helperText={error ? error.message : null}
                               />;
                             }
                             }

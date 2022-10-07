@@ -11,7 +11,6 @@ export function InputText({ label, name, control, defaultValue, propsInput, help
                         <TextField className={'w-full'}
                                    id='outlined-basic'
                                    label={label}
-
                                    {...propsInput}
                                    variant='outlined'
                                    {...field}

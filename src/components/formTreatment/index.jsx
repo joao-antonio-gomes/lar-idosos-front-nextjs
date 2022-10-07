@@ -10,93 +10,29 @@ import {useFieldArray} from 'react-hook-form';
 
 function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, handleClose }) {
   const {
-    watch,
     register,
-    getValues,
-    handleSubmit,
     control,
     formState: { errors },
-    reset,
   } = useForm;
-
 
   const {
     fields,
     append,
-    prepend,
     remove,
-    swap,
-    move,
-    insert,
   } = useFieldArray({
     control,
     name: 'medicines',
     rules: {
-    }
+    },
   });
 
-  useEffect(() => {
-    let subscribe = watch((value, { name, type }) => {
-      if (name !== 'quantidade-remedios') return;
-      setNumeroRemedios(value['quantidade-remedios']);
+  const appendRemedio = () => {
+    append({
+      medicine: "",
+      hourInterval: "",
+      dosage: "",
+      dosageType: "",
     });
-  }, [watch]);
-
-  const [numeroRemedios, setNumeroRemedios] = useState(0);
-  const handleNumeroRemedios = (e) => {
-    setNumeroRemedios(e.target.value);
-  };
-
-  const containerRemedio = (id) => {
-    return (
-        <div id={`container-remedio-${id}`}>
-          <Divider />
-          <Typography marginTop={1}>Remédio {id + 1}</Typography>
-          <div className={'mt-3 md:flex w-full'}>
-            <div className={'mb-5 w-full md:mr-2.5'}>
-              <AutocompleteApp
-                  register={register}
-                  control={control}
-                  options={medicinesList}
-                  name={`medicine-${id}`}
-                  errors={errors}
-                  label='Remédios' />
-            </div>
-            <div className={'mb-5 w-full md:mr-2.5'}>
-              <InputText label={'Intervalo (horas)'}
-                         name={`hourInterval-${id}`}
-                         propsInput={{ type: 'number' }}
-                         register={register}
-                         control={control} />
-            </div>
-          </div>
-          <div className={'md:flex w-full'}>
-            <div className={'mb-5 w-full md:mr-2.5'}>
-              <InputText label={'Dosagem'}
-                         name={`dosage-${id}`}
-                         propsInput={{ type: 'number' }}
-                         register={register}
-                         control={control} />
-            </div>
-            <div className={'mb-5 w-full md:mr-2.5'}>
-              <SelectApp label={'Tipo da Dosagem'}
-                         name={`dosageType-${id}`}
-                         options={dosageType}
-                         register={register}
-                         control={control} />
-            </div>
-          </div>
-          <Divider />
-        </div>
-    );
-  };
-
-  const renderContainerRemedio = () => {
-    let remediosArrayTemp = [];
-    for (let i = 0; i < numeroRemedios; i++) {
-      remediosArrayTemp.push(containerRemedio(i));
-    }
-    return remediosArrayTemp;
   };
 
   return (
@@ -131,18 +67,53 @@ function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, 
                            control={control} />
           </div>
         </div>
-        <div className={'md:flex w-full'}>
-          <div className={'mb-5 w-full md:mr-2.5'}>
-            <InputText label={'Quantidade de remédios'}
-                       name={`quantidade-remedios`}
-                       defaultValue={'0'}
-                       helperText='Por favor, escolha no máximo 10 remédios'
-                       propsInput={{ type: 'number', InputProps: { inputProps: { min: 0, max: 10 } } }}
-                       register={register}
-                       control={control} />
-          </div>
-        </div>
-        {renderContainerRemedio()}
+        <Button variant='contained' className='mb-4' onClick={() => appendRemedio()}>Adicionar Remédio</Button>
+        {fields.map((field, index) => {
+          return (
+              <div key={`container-remedio-${index}`}>
+                <Divider />
+                <div className='flex justify-between mt-3'>
+                  <Typography marginTop={1}>Remédio {index + 1}</Typography>
+                  <Button variant='contained' color='error' onClick={() => remove(index)}>Remover</Button>
+                </div>
+                <div className={'mt-3 md:flex w-full'}>
+                  <div className={'mb-5 w-full md:mr-2.5'}>
+                    <AutocompleteApp
+                        register={register}
+                        control={control}
+                        options={medicinesList}
+                        name={`medicines.${index}.medicine`}
+                        errors={errors}
+                        label='Remédios' />
+                  </div>
+                  <div className={'mb-5 w-full md:mr-2.5'}>
+                    <InputText label={'Intervalo (horas)'}
+                               name={`medicines.${index}.hourInterval`}
+                               propsInput={{ type: 'number' }}
+                               register={register}
+                               control={control} />
+                  </div>
+                </div>
+                <div className={'md:flex w-full'}>
+                  <div className={'mb-5 w-full md:mr-2.5'}>
+                    <InputText label={'Dosagem'}
+                               name={`medicines.${index}.dosage`}
+                               propsInput={{ type: 'number' }}
+                               register={register}
+                               control={control} />
+                  </div>
+                  <div className={'mb-5 w-full md:mr-2.5'}>
+                    <SelectApp label={'Tipo da Dosagem'}
+                               name={`medicines.${index}.dosageType`}
+                               options={dosageType}
+                               register={register}
+                               control={control} />
+                  </div>
+                </div>
+                <Divider />
+              </div>
+          )
+        })}
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>
           <Button type='submit' autoFocus>Cadastrar</Button>

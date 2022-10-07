@@ -13,10 +13,12 @@ import moment from 'moment';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import TreatmentDialog from '../../src/components/treatmentDialog';
+import TreatmentCard from '../../src/components/treatmentCard';
 
 function PacientePerfil() {
   const router = useRouter();
   const [patient, setPatient] = useState();
+  const [treatments, setTreatments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const snackbar = useSnackbar();
   const [openModalTreatment, setOpenModalTreatment] = useState(false);
@@ -42,6 +44,7 @@ function PacientePerfil() {
               cpf: data.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'),
             };
             setPatient(data);
+            setTreatments(data.treatments);
             setIsLoading(false);
           })
           .catch((error) => snackbar.showSnackBar('Houve um erro ao carregar os dados, atualize a página e tente novamente', 'error'));
@@ -127,6 +130,13 @@ function PacientePerfil() {
                             }}>
                   <AddIcon />
                 </IconButton>
+                <div className='mt-5 flex overflow-x-auto w-full p-5 space-x-5'>
+                  {treatments.length > 0 ?
+                    treatments.map(treatment => <TreatmentCard treatment={treatment} />)
+                      :
+                      "Nenhum tratamento para esse paciente."
+                  }
+                </div>
               </>
           }
           {openModalTreatment && <TreatmentDialog handleClose={() => setOpenModalTreatment(false)} patient={patient} />}

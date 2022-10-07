@@ -7,8 +7,11 @@ import MedicineService from '../../service/MedicineService';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import FormTreatment from '../formTreatment';
+import TreatmentService from '../../service/TreatmentService';
+import {useSnackbar} from '../../context/snackbar';
 
 function TreatmentDialog({ handleClose, patient, treatment }) {
+  const snackbar = useSnackbar();
   const [isLoaded, setIsLoaded] = useState(false);
   const [dosageType, setDosageType] = useState();
   const [defaultMedicines, setDefaultMedicines] = useState([]);
@@ -21,12 +24,16 @@ function TreatmentDialog({ handleClose, patient, treatment }) {
         .typeError('Data do início do tratamento inválida'),
     endDate: Yup.date().required('Data do fim do tratamento é obrigatório')
         .typeError('Data do fim do tratamento inválida'),
-    // medicine: Yup.object().required('Remédio é obrigatório').nullable(),
-    // dosage: Yup.number().required('Dosagem é obrigatório')
-    //     .typeError('Dosagem deve ser um número inteiro!'),
-    // dosageType: Yup.string().required('Tipo de dosagem é obrigatório'),
-    // hourInterval: Yup.number().required('Intervalo (horas) é obrigatório')
-    //     .typeError('Intervalo (horas) deve ser um número inteiro!'),
+    medicines: Yup.array().of(
+        Yup.object().shape({
+          medicine: Yup.object().required('Remédio é obrigatório').nullable(),
+          dosage: Yup.number().required('Dosagem é obrigatório')
+              .typeError('Dosagem deve ser um número inteiro!'),
+          dosageType: Yup.string().required('Tipo de dosagem é obrigatório'),
+          hourInterval: Yup.number().required('Intervalo (horas) é obrigatório')
+              .typeError('Intervalo (horas) deve ser um número inteiro!'),
+        }),
+    ),
   });
 
   const {
@@ -36,12 +43,23 @@ function TreatmentDialog({ handleClose, patient, treatment }) {
   });
 
   const onSubmit = handleSubmit((data) => {
-    // data = {
-    //   ...data,
-    //   patientId: patient.id,
-    //   medicineId: data.medicine.id
-    // }
-    console.log(data);
+    data = {
+      ...data,
+      patientId: patient.id,
+      medicines: data.medicines.map(medicine => ({ ...medicine, medicineId: medicine.medicine.id })),
+    };
+    TreatmentService.create(data)
+        .then((response) => {
+          snackbar.showSnackBar('Tratamento criado com sucesso', 'success');
+          handleClose();
+        })
+        .catch(({ response }) => {
+          if (response.data.message) {
+            snackbar.showSnackBar(response.data.message, 'error');
+            return;
+          }
+          snackbar.showSnackBar('Houve um erro ao criar o tratamento, atualize a página e tente novamente', 'error');
+        });
   });
 
   useEffect(() => {

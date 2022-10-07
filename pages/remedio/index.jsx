@@ -42,10 +42,6 @@ function RemediosListagem(props) {
                 <Button variant='contained' size={'small'} style={{ fontWeight: 'bold' }}
                         color={'info'}>Detalhes</Button>
               </Link>
-              <Link href={'/remedio/edicao/' + patient.id}>
-                <Button variant='contained' size={'small'} style={{ fontWeight: 'bold' }}
-                        color={'success'}>Editar</Button>
-              </Link>
               <Button variant='contained' size={'small'} style={{ fontWeight: 'bold' }}
                       onClick={() => handleOpenModalDeleteMedicine(patient)}
                       color={'error'}>Excluir</Button>
