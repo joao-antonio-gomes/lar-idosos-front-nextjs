@@ -4,9 +4,9 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import 'tailwindcss/tailwind.css';
 import '../public/styles/global.css';
-import {Pages} from './pages';
 import MiniDrawer from '../src/components/menu';
 import {SnackbarProvider} from '../src/context/snackbar';
+import Pages from './pages';
 
 function MyApp({ Component, pageProps }) {
   return (
