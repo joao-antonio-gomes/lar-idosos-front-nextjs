@@ -90,7 +90,7 @@ function PacienteListagem() {
       () => {
         PatientService.getAll(patientFilter)
             .then(({ data }) => {
-              const patientsData = data.result.map(patient => {
+              const patientsData = data.content.map(patient => {
                 patient.age = moment().diff(patient.birthDate, 'years');
                 return patient;
               });
