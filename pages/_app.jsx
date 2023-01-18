@@ -5,16 +5,20 @@ import '@fontsource/roboto/700.css';
 import 'tailwindcss/tailwind.css';
 import '../public/styles/global.css';
 import MiniDrawer from '../src/components/menu';
-import {SnackbarProvider} from '../src/context/snackbar';
+import { SnackbarProvider } from '../src/context/snackbar';
 import Pages from '../src/components/pages';
 
 function MyApp({ Component, pageProps }) {
   return (
-      <SnackbarProvider>
-        <MiniDrawer>
-          <Pages pageProps={pageProps} Component={Component} router={pageProps.router} />
-        </MiniDrawer>
-      </SnackbarProvider>
+    <SnackbarProvider>
+      <MiniDrawer>
+        <Pages
+          pageProps={pageProps}
+          Component={Component}
+          router={pageProps.router}
+        />
+      </MiniDrawer>
+    </SnackbarProvider>
   );
 }
 

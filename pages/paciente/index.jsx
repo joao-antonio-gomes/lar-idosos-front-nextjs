@@ -1,11 +1,11 @@
 import moment from 'moment/moment';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PatientService from '../../src/service/PatientService';
-import {TableApp} from '../../src/components/tableApp';
-import {Button, Container, TextField} from '@mui/material';
+import { TableApp } from '../../src/components/tableApp';
+import { Button, Container, TextField } from '@mui/material';
 import Link from 'next/link';
 import ConfirmDialog from '../../src/components/confirmDialog';
-import {useSnackbar} from '../../src/context/snackbar';
+import { useSnackbar } from '../../src/context/snackbar';
 import Typography from '@mui/material/Typography';
 
 function PacienteListagem() {
@@ -13,7 +13,7 @@ function PacienteListagem() {
   const [patients, setPatients] = useState();
   const [openModalDeletePatient, setOpenModalDeletePatient] = useState(false);
   const [patientToDelete, setPatientToDelete] = useState();
-  const [patientFilter, setPatientFilter] = useState({ page: 0, itemsPerPage: 10, name: null });
+  const [patientFilter, setPatientFilter] = useState({ page: 0, size: 10, name: null });
   const columns = [
     { field: 'id', headerName: 'ID', width: 70, sortable: false },
     { field: 'name', headerName: 'Nome', width: 160, sortable: false, styleRow: { textAlign: 'left' } },
@@ -22,7 +22,7 @@ function PacienteListagem() {
       headerName: 'Idade',
       width: 90,
       type: 'number',
-      sortable: false,
+      sortable: false
     },
     {
       field: 'birthDate',
@@ -30,13 +30,13 @@ function PacienteListagem() {
       disablePadding: false,
       width: 120,
       sortable: false,
-      valueGetter: (patient) => moment(patient.birthDate).format('DD/MM/YYYY'),
+      valueGetter: (patient) => moment(patient.birthDate).format('DD/MM/YYYY')
     },
     {
       field: 'phone',
       headerName: 'Telefone',
       width: 120,
-      sortable: false,
+      sortable: false
     },
     {
       headerName: 'Ações',
@@ -44,22 +44,37 @@ function PacienteListagem() {
       sortable: false,
       valueGetter: (patient) => {
         return (
-            <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-              <Link href={'/paciente/' + patient.id}>
-                <Button variant='contained' size={'small'} style={{ fontWeight: 'bold' }}
-                        color={'info'}>Perfil</Button>
-              </Link>
-              <Link href={'/paciente/edicao/' + patient.id}>
-                <Button variant='contained' size={'small'} style={{ fontWeight: 'bold' }}
-                        color={'success'}>Editar</Button>
-              </Link>
-              <Button variant='contained' size={'small'} style={{ fontWeight: 'bold' }}
-                      onClick={() => handleOpenModalDeletePatient(patient)}
-                      color={'error'}>Excluir</Button>
-            </div>
+          <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+            <Link href={'/paciente/' + patient.id}>
+              <Button
+                variant="contained"
+                size={'small'}
+                style={{ fontWeight: 'bold' }}
+                color={'info'}>
+                Perfil
+              </Button>
+            </Link>
+            <Link href={'/paciente/edicao/' + patient.id}>
+              <Button
+                variant="contained"
+                size={'small'}
+                style={{ fontWeight: 'bold' }}
+                color={'success'}>
+                Editar
+              </Button>
+            </Link>
+            <Button
+              variant="contained"
+              size={'small'}
+              style={{ fontWeight: 'bold' }}
+              onClick={() => handleOpenModalDeletePatient(patient)}
+              color={'error'}>
+              Excluir
+            </Button>
+          </div>
         );
-      },
-    },
+      }
+    }
   ];
   const snackbar = useSnackbar();
 
@@ -70,35 +85,31 @@ function PacienteListagem() {
 
   const handleDeletePatient = (patient) => {
     PatientService.delete(patient.id)
-        .then((response) => {
-          snackbar.showSnackBar('Paciente excluído com sucesso', 'success');
-          fetchData();
-        })
-        .catch(({ response }) => {
-          if (response.data.message) {
-            snackbar.showSnackBar(response.data.message, 'error');
-            return;
-          }
-          snackbar.showSnackBar('Houve um erro ao excluir o paciente, atualize a página e tente novamente', 'error');
-        })
-        .finally(() => {
-          setOpenModalDeletePatient(false);
-        });
+      .then((response) => {
+        snackbar.showSnackBar('Paciente excluído com sucesso', 'success');
+        fetchData();
+      })
+      .catch(({ response }) => {
+        if (response.data.message) {
+          snackbar.showSnackBar(response.data.message, 'error');
+          return;
+        }
+        snackbar.showSnackBar('Houve um erro ao excluir o paciente, atualize a página e tente novamente', 'error');
+      })
+      .finally(() => {
+        setOpenModalDeletePatient(false);
+      });
   };
 
-  const fetchData = useCallback(
-      () => {
-        PatientService.getAll(patientFilter)
-            .then(({ data }) => {
-              const patientsData = data.content.map(patient => {
-                patient.age = moment().diff(patient.birthDate, 'years');
-                return patient;
-              });
-              setPatients({ ...data, result: patientsData });
-            });
-      },
-      [patientFilter],
-  );
+  const fetchData = useCallback(() => {
+    PatientService.getAll(patientFilter).then(({ data }) => {
+      const patientsData = data.content.map((patient) => {
+        patient.age = moment().diff(patient.birthDate, 'years');
+        return patient;
+      });
+      setPatients({ ...data, patientsData });
+    });
+  }, [patientFilter]);
 
   let delayTimer;
   const handleChangeSearchPatient = (e) => {
@@ -109,7 +120,6 @@ function PacienteListagem() {
   };
 
   const handlePageChange = (e, newPage) => {
-    console.log('chamado');
     console.log(newPage);
     setPatientFilter({ ...patientFilter, page: newPage });
   };
@@ -118,30 +128,56 @@ function PacienteListagem() {
     fetchData();
   }, [patientFilter]);
 
-
   useEffect(() => {
     if (!patients) return;
     setIsLoaded(true);
   }, [patients]);
 
-
   return (
-      <Container>
-        <Typography marginBottom={5} textAlign='center' fontSize={40} variant='h3'>Pacientes</Typography>
-        <Link href={'/paciente/cadastro'}>
-          <Button variant='contained' style={{ marginBottom: 20 }}>Novo Paciente</Button>
-        </Link>
-        <div style={{ margin: '10px 0 20px', display: 'flex', width: '100%' }}>
-          <TextField fullWidth={'100%'} variant={'standard'} label={'Digite um nome para filtrar'}
-                     onChange={(e) => handleChangeSearchPatient(e)} />
-        </div>
-        {isLoaded && <TableApp columns={columns} {...patients} handlePageChange={handlePageChange} noContentText='Não foi encontrado nenhum paciente.' />}
-        {openModalDeletePatient && <ConfirmDialog textButtonAgree={'Sim'} textButtonCancel={'Cancelar'}
-                                                  dialogTitle={`Você deseja excluir o paciente ${patientToDelete.name}?`}
-                                                  dialogText={'Essa ação é irreversível e irá excluir todos os dados do paciente na clínica.'}
-                                                  handleAgree={() => handleDeletePatient(patientToDelete)}
-                                                  handleClose={() => setOpenModalDeletePatient(false)} />}
-      </Container>
+    <Container>
+      <Typography
+        marginBottom={5}
+        textAlign="center"
+        fontSize={40}
+        variant="h3">
+        Pacientes
+      </Typography>
+      <Link href={'/paciente/cadastro'}>
+        <Button
+          variant="contained"
+          style={{ marginBottom: 20 }}>
+          Novo Paciente
+        </Button>
+      </Link>
+      <div style={{ margin: '10px 0 20px', display: 'flex', width: '100%' }}>
+        <TextField
+          fullWidth={'100%'}
+          variant={'standard'}
+          label={'Digite um nome para filtrar'}
+          onChange={(e) => handleChangeSearchPatient(e)}
+        />
+      </div>
+      {isLoaded && (
+        <TableApp
+          columns={columns}
+          content={patients.content}
+          count={patients.totalElements}
+          page={patients.pageable.pageNumber}
+          handlePageChange={handlePageChange}
+          noContentText="Não foi encontrado nenhum paciente."
+        />
+      )}
+      {openModalDeletePatient && (
+        <ConfirmDialog
+          textButtonAgree={'Sim'}
+          textButtonCancel={'Cancelar'}
+          dialogTitle={`Você deseja excluir o paciente ${patientToDelete.name}?`}
+          dialogText={'Essa ação é irreversível e irá excluir todos os dados do paciente na clínica.'}
+          handleAgree={() => handleDeletePatient(patientToDelete)}
+          handleClose={() => setOpenModalDeletePatient(false)}
+        />
+      )}
+    </Container>
   );
 }
 

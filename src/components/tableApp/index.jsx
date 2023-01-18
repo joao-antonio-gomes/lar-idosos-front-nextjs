@@ -1,73 +1,91 @@
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from '@mui/material';
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow
+} from '@mui/material';
 
-export function TableApp({ result, columns, handlePageChange, count, offset, noContentText }) {
+export function TableApp({ content, columns, handlePageChange, count, page, noContentText }) {
   function findColumnByField(field) {
     return columns.filter((column) => column.field === field)[0];
   }
 
   const columnsArray = [];
   return (
-      <>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} size='small' aria-label='a dense table'>
-            <TableHead>
+    <>
+      <TableContainer component={Paper}>
+        <Table
+          sx={{ minWidth: 650 }}
+          size="small"
+          aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              {columns.map((column, idx) => {
+                columnsArray.push(column.field);
+                return (
+                  <TableCell
+                    key={column.field + '-' + idx}
+                    style={{
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                      width: column.width ? column.width : 80,
+                      ...column.styleColumn
+                    }}>
+                    {column.headerName}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {content.length < 1 ? (
               <TableRow>
-                {columns.map((column, idx) => {
-                  columnsArray.push(column.field);
-                  return (
-                      <TableCell key={column.field + '-' + idx} style={{
-                        textAlign: 'center',
-                        fontWeight: 'bold',
-                        width: column.width ? column.width : 80,
-                        ...column.styleColumn,
-                      }}>
-                        {column.headerName}
-                      </TableCell>
-                  );
-                })}
+                <TableCell colSpan={6}>{noContentText}</TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {result.length < 1 ?
-                  <TableRow>
-                    <TableCell colSpan={6}>
-                      {noContentText}
-                    </TableCell>
-                  </TableRow>
-                  :
-                  result.map((row, idx) => (
-                      <TableRow
-                          key={row.name + '-' + idx}
-                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                        {columnsArray.map((column, idx) => {
-                          return (
-                              <TableCell key={row[column] + '-' + column + '-' + idx}
-                                         style={{
-                                           textAlign: 'center',
-                                           maxWidth: 200, // percentage also works
-                                           whiteSpace: 'nowrap',
-                                           overflow: 'hidden',
-                                           textOverflow: 'ellipsis',
-                                           ...findColumnByField(column).styleRow,
-                                         }}>
-                                {findColumnByField(column).valueGetter ? findColumnByField(column).valueGetter(row) : row[column]}
-                              </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                  ))
-              }
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-            rowsPerPageOptions={[10]}
-            component='div'
-            count={count}
-            rowsPerPage={10}
-            page={offset}
-            onPageChange={handlePageChange}
-        />
-      </>
+            ) : (
+              content.map((row, idx) => (
+                <TableRow
+                  key={row.name + '-' + idx}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  {columnsArray.map((column, idx) => {
+                    return (
+                      <TableCell
+                        key={row[column] + '-' + column + '-' + idx}
+                        style={{
+                          textAlign: 'center',
+                          maxWidth: 200, // percentage also works
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          ...findColumnByField(column).styleRow
+                        }}>
+                        {findColumnByField(column).valueGetter
+                          ? findColumnByField(column).valueGetter(row)
+                          : row[column]}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10]}
+        component="div"
+        count={count}
+        rowsPerPage={10}
+        page={page}
+        onPageChange={(event, value) => {
+          console.log(value);
+          handlePageChange(event, value);
+        }}
+      />
+    </>
   );
 }

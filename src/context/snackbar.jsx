@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from 'react';
+import { createContext, useContext, useState } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
@@ -20,18 +20,22 @@ const SnackbarProvider = ({ children }) => {
   };
 
   return (
-      <SnackbarContext.Provider value={{ showSnackBar }}>
-        <Snackbar
-            open={open}
-            autoHideDuration={6000}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            onClose={handleClose}>
-          <MuiAlert onClose={handleClose} severity={typeColor} elevation={6} variant={"filled"}>
-            {message}
-          </MuiAlert>
-        </Snackbar>
-        {children}
-      </SnackbarContext.Provider>
+    <SnackbarContext.Provider value={{ showSnackBar }}>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        onClose={handleClose}>
+        <MuiAlert
+          onClose={handleClose}
+          severity={typeColor}
+          elevation={6}
+          variant={'filled'}>
+          {message}
+        </MuiAlert>
+      </Snackbar>
+      {children}
+    </SnackbarContext.Provider>
   );
 };
 

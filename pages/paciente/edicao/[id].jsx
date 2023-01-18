@@ -1,14 +1,14 @@
-import {useRouter} from 'next/router';
-import {useEffect, useState} from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import PatientService from '../../../src/service/PatientService';
-import {Container, Typography} from '@mui/material';
-import {useSnackbar} from '../../../src/context/snackbar';
+import { Container, Typography } from '@mui/material';
+import { useSnackbar } from '../../../src/context/snackbar';
 import dayjs from 'dayjs';
 import UserService from '../../../src/service/UserService';
-import {useForm} from 'react-hook-form';
-import {yupResolver} from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import {FormPatient} from '../../../src/components/formPatient';
+import { FormPatient } from '../../../src/components/formPatient';
 
 function PacienteEdicao() {
   const minDate = dayjs().subtract(60, 'years');
@@ -24,12 +24,12 @@ function PacienteEdicao() {
     name: Yup.string().required('Nome é obrigatório'),
     cpf: Yup.string().required('CPF é obrigatório'),
     birthDate: Yup.date()
-        .required('Data de nascimento é obrigatório')
-        .max(minDate, `Data mínima ${minDate.format('DD/MM/YYYY')}`)
-        .min(maxDate, `Data máxima ${maxDate.format('DD/MM/YYYY')}`)
-        .typeError('Data inválida'),
+      .required('Data de nascimento é obrigatório')
+      .max(minDate, `Data mínima ${minDate.format('DD/MM/YYYY')}`)
+      .min(maxDate, `Data máxima ${maxDate.format('DD/MM/YYYY')}`)
+      .typeError('Data inválida'),
     phone: Yup.string().required('Celular é obrigatório'),
-    gender: Yup.string().required('Gênero é obrigatório'),
+    gender: Yup.string().required('Gênero é obrigatório')
   });
 
   const {
@@ -37,24 +37,21 @@ function PacienteEdicao() {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
+    reset
   } = useForm({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema)
   });
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    if(router.isReady){
+    if (router.isReady) {
       const { id } = router.query;
       if (!id) return null;
-      UserService.getGender()
-          .then(({ data }) => setGenderList(data));
-      PatientService.getById(id)
-          .then(({ data }) => {
-            setPatient(data);
-          });
+      UserService.getGender().then(({ data }) => setGenderList(data));
+      PatientService.getById(id).then(({ data }) => {
+        setPatient(data);
+      });
     }
   }, [router.isReady]);
 
@@ -66,34 +63,41 @@ function PacienteEdicao() {
 
   const onSubmit = handleSubmit((data) => {
     PatientService.patch(data)
-        .then((response) => {
-          snackbar.showSnackBar('Paciente atualizado com sucesso', 'success');
-          router.push('/paciente');
-        })
-        .catch(({ response }) => {
-          if (response.status === 400) {
-            snackbar.showSnackBar(response.data.message, 'error');
-            return;
-          }
-          snackbar.showSnackBar('Houve um erro ao atualizar o paciente, atualize a página e tente novamente', 'error');
-        });
+      .then((response) => {
+        snackbar.showSnackBar('Paciente atualizado com sucesso', 'success');
+        router.push('/paciente');
+      })
+      .catch(({ response }) => {
+        if (response.status === 400) {
+          snackbar.showSnackBar(response.data.message, 'error');
+          return;
+        }
+        snackbar.showSnackBar('Houve um erro ao atualizar o paciente, atualize a página e tente novamente', 'error');
+      });
   });
 
   return (
-      <Container>
-        <Typography variant={'h5'} textAlign={'center'} className={'mb-10'}>
-          Edição de Paciente
-        </Typography>
-        {isLoaded &&
-            <FormPatient genderList={genderList} useForm={{
-              register,
-              handleSubmit,
-              control,
-              formState: { errors },
-              reset,
-            }} onSubmit={onSubmit} />
-        }
-      </Container>
+    <Container>
+      <Typography
+        variant={'h5'}
+        textAlign={'center'}
+        className={'mb-10'}>
+        Edição de Paciente
+      </Typography>
+      {isLoaded && (
+        <FormPatient
+          genderList={genderList}
+          useForm={{
+            register,
+            handleSubmit,
+            control,
+            formState: { errors },
+            reset
+          }}
+          onSubmit={onSubmit}
+        />
+      )}
+    </Container>
   );
 }
 
