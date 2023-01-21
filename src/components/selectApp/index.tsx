@@ -1,7 +1,15 @@
 import { MenuItem, TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
+import { Control } from 'react-hook-form/dist/types';
 
-export function SelectApp({ label, control, options, name }) {
+interface Props {
+  label: string;
+  name: string;
+  options: {label: string, value: string}[];
+  control: Control<any, any>;
+}
+
+export function SelectApp({ label, control, options, name }: Props) {
   return (
     <Controller
       name={name}

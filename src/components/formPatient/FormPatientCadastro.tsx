@@ -4,10 +4,17 @@ import { SelectApp } from '../selectApp';
 import { DatePickerApp } from '../datePickerApp';
 import { Button } from '@mui/material';
 import dayjs from 'dayjs';
+import Enum from '../../interface/Enum';
 
-export const FormPatient = ({ onSubmit, useForm, genderList }) => {
-  const minDate = dayjs().subtract(60, 'years');
-  const maxDate = dayjs().subtract(110, 'years');
+interface Props {
+  onSubmit: () => void;
+  useForm: any;
+  genderList: Enum[];
+}
+
+export const FormPatientCadastro = ({ onSubmit, useForm, genderList }: Props) => {
+  const minDate = dayjs().subtract(60, 'years').toDate();
+  const maxDate = dayjs().subtract(110, 'years').toDate();
 
   const {
     register,
@@ -24,7 +31,6 @@ export const FormPatient = ({ onSubmit, useForm, genderList }) => {
           <InputText
             label={'Nome'}
             name={'name'}
-            register={register}
             control={control}
           />
         </div>
@@ -41,7 +47,6 @@ export const FormPatient = ({ onSubmit, useForm, genderList }) => {
             label={'Gênero'}
             name={'gender'}
             options={genderList}
-            register={register}
             control={control}
           />
         </div>
@@ -56,18 +61,10 @@ export const FormPatient = ({ onSubmit, useForm, genderList }) => {
             control={control}
           />
         </div>
-        <div className={'mb-5 w-full md:ml-2.5'}>
-          <InputMaskApp
-            mask={'(99) 9 9999-9999'}
-            label={'Celular'}
-            name={'phone'}
-            control={control}
-          />
-        </div>
       </div>
 
       <Button
-        variant="contained"
+        variant='contained'
         type={'submit'}>
         Cadastrar
       </Button>

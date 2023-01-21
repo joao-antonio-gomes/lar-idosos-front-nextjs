@@ -1,6 +1,7 @@
 import { faHome, faPersonCane, faCapsules } from '@fortawesome/free-solid-svg-icons';
+import MenuItem from '../interface/MenuItem';
 
-const menuItems = [
+const MenuItems: MenuItem[] = [
   {
     label: 'Início',
     link: '/',
@@ -20,4 +21,4 @@ const menuItems = [
   }
 ];
 
-export default menuItems;
+export default MenuItems;

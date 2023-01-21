@@ -2,7 +2,16 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
-function ConfirmDialog({ handleClose, dialogTitle, dialogText, textButtonCancel, textButtonAgree, handleAgree }) {
+interface Props {
+  dialogTitle: string;
+  dialogText: string;
+  textButtonCancel: string;
+  textButtonAgree: string;
+  handleClose: () => void;
+  handleAgree: () => void;
+}
+
+function ConfirmDialog({ handleClose, dialogTitle, dialogText, textButtonCancel, textButtonAgree, handleAgree }: Props) {
   return (
     <Dialog
       open={true}

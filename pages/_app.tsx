@@ -7,10 +7,12 @@ import '../public/styles/global.css';
 import MiniDrawer from '../src/components/menu';
 import { SnackbarProvider } from '../src/context/snackbar';
 import Pages from '../src/components/pages';
+import { AppProps } from 'next/app';
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <SnackbarProvider>
+      {/*@ts-ignore*/}
       <MiniDrawer>
         <Pages
           pageProps={pageProps}

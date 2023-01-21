@@ -164,11 +164,11 @@ function PacientePerfil() {
               }}>
               <AddIcon />
             </IconButton>
-            <div className="mt-5 flex overflow-x-auto w-full p-5 space-x-5">
-              {treatments.length > 0
-                ? treatments.map((treatment) => <TreatmentCard treatment={treatment} />)
-                : 'Nenhum tratamento para esse paciente.'}
-            </div>
+            {/*<div className="mt-5 flex overflow-x-auto w-full p-5 space-x-5">*/}
+            {/*  {treatments.length > 0*/}
+            {/*    ? treatments.map((treatment) => <TreatmentCard treatment={treatment} />)*/}
+            {/*    : 'Nenhum tratamento para esse paciente.'}*/}
+            {/*</div>*/}
           </>
         )}
         {openModalTreatment && (

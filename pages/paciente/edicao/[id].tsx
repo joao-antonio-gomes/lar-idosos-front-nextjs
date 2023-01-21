@@ -1,23 +1,30 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import PatientService from '../../../src/service/PatientService';
-import { Container, Typography } from '@mui/material';
+import { Button, Container, Typography } from '@mui/material';
 import { useSnackbar } from '../../../src/context/snackbar';
 import dayjs from 'dayjs';
 import UserService from '../../../src/service/UserService';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import * as Yup from 'yup';
-import { FormPatient } from '../../../src/components/formPatient';
+import { NextRouter } from 'next/dist/shared/lib/router/router';
+import Enum from '../../../src/interface/Enum';
+import FormPatientEdicaoValues from '../../../src/interface/FormPatientEdicaoValues';
+import { InputText } from '../../../src/components/inputText';
+import { InputMaskApp } from '../../../src/components/inputMaskApp';
+import { SelectApp } from '../../../src/components/selectApp';
+import { DatePickerApp } from '../../../src/components/datePickerApp';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { FormPatientEdicao } from '../../../src/components/formPatient/FormPatientEdicao';
 
 function PacienteEdicao() {
   const minDate = dayjs().subtract(60, 'years');
   const maxDate = dayjs().subtract(110, 'years');
 
   const snackbar = useSnackbar();
-  const router = useRouter();
+  const router: NextRouter = useRouter();
   const [patient, setPatient] = useState(null);
-  const [genderList, setGenderList] = useState(null);
+  const [genderList, setGenderList] = useState<Enum[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const validationSchema = Yup.object().shape({
@@ -28,7 +35,6 @@ function PacienteEdicao() {
       .max(minDate, `Data mínima ${minDate.format('DD/MM/YYYY')}`)
       .min(maxDate, `Data máxima ${maxDate.format('DD/MM/YYYY')}`)
       .typeError('Data inválida'),
-    phone: Yup.string().required('Celular é obrigatório'),
     gender: Yup.string().required('Gênero é obrigatório')
   });
 
@@ -38,21 +44,22 @@ function PacienteEdicao() {
     control,
     formState: { errors },
     reset
-  } = useForm({
+  } = useForm<FormPatientEdicaoValues>({
     resolver: yupResolver(validationSchema)
   });
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+  }, []);
 
   useEffect(() => {
-    if (router.isReady) {
-      const { id } = router.query;
-      if (!id) return null;
-      UserService.getGender().then(({ data }) => setGenderList(data));
-      PatientService.getById(id).then(({ data }) => {
-        setPatient(data);
-      });
-    }
+    if (!router.isReady) return;
+    const { id } = router.query;
+    if (!id) return;
+
+    UserService.getGender().then(({ data }) => setGenderList(data));
+    PatientService.getById(id).then(({ data }) => {
+      setPatient(data);
+    });
   }, [router.isReady]);
 
   useEffect(() => {
@@ -61,20 +68,21 @@ function PacienteEdicao() {
     setIsLoaded(true);
   }, [patient, genderList]);
 
-  const onSubmit = handleSubmit((data) => {
-    PatientService.patch(data)
-      .then((response) => {
-        snackbar.showSnackBar('Paciente atualizado com sucesso', 'success');
-        router.push('/paciente');
-      })
-      .catch(({ response }) => {
-        if (response.status === 400) {
-          snackbar.showSnackBar(response.data.message, 'error');
-          return;
-        }
-        snackbar.showSnackBar('Houve um erro ao atualizar o paciente, atualize a página e tente novamente', 'error');
-      });
-  });
+  const onSubmit = (data: FormPatientEdicaoValues): void => {
+    console.log(data);
+    // PatientService.patch(data)
+    //   .then((response) => {
+    //     snackbar.showSnackBar('Paciente atualizado com sucesso', 'success');
+    //     router.push('/paciente');
+    //   })
+    //   .catch(({ response }) => {
+    //     if (response.status === 400) {
+    //       snackbar.showSnackBar(response.data.message, 'error');
+    //       return;
+    //     }
+    //     snackbar.showSnackBar('Houve um erro ao atualizar o paciente, atualize a página e tente novamente', 'error');
+    //   });
+  };
 
   return (
     <Container>
@@ -85,16 +93,15 @@ function PacienteEdicao() {
         Edição de Paciente
       </Typography>
       {isLoaded && (
-        <FormPatient
+        <FormPatientEdicao
           genderList={genderList}
           useForm={{
             register,
-            handleSubmit,
             control,
             formState: { errors },
             reset
           }}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit(onSubmit)}
         />
       )}
     </Container>

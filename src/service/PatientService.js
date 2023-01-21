@@ -1,23 +1,23 @@
 import { api } from './api';
 
 class PatientService {
-  static getAll(params) {
+  static async getAll(params) {
     return api.get('/patients', { params: { ...params } });
   }
 
-  static getById(patientId) {
+  static async getById(patientId) {
     return api.get(`/patients/${patientId}`);
   }
 
-  static create(data) {
+  static async create(data) {
     return api.post(`/patients/`, data);
   }
 
-  static patch(data) {
+  static async patch(data) {
     return api.patch(`/patients/`, data);
   }
 
-  static delete(patientId) {
+  static async delete(patientId) {
     return api.delete(`/patients/${patientId}`);
   }
 }

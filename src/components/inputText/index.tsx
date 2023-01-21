@@ -1,7 +1,17 @@
 import { TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
+import { Control } from 'react-hook-form/dist/types';
 
-export function InputText({ label, name, control, defaultValue, propsInput, helperText }) {
+interface Props {
+  label: string;
+  name: string;
+  helperText?: string;
+  defaultValue?: string;
+  propsInput?: any;
+  control: Control<any, any>;
+}
+
+export function InputText({ label, name, control, defaultValue, propsInput, helperText }: Props) {
   return (
     <Controller
       name={name}

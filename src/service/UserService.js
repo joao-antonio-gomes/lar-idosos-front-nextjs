@@ -2,7 +2,7 @@ import { api } from './api';
 
 class PatientService {
   static getGender() {
-    return api.get('/utils/gender');
+    return api.get('/persons/genders');
   }
 }
 

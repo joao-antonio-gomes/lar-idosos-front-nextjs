@@ -1,15 +1,25 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { AlertColor } from '@mui/material/Alert/Alert';
+import * as React from 'react';
 
-const SnackbarContext = createContext({});
+interface SnackBarContextActions {
+  showSnackBar: (text: string, typeColor: AlertColor) => void;
+}
 
-const SnackbarProvider = ({ children }) => {
+const SnackbarContext = createContext({} as SnackBarContextActions);
+
+interface SnackbarProps {
+  children?: React.ReactNode | React.ReactNode[];
+}
+
+const SnackbarProvider = ({ children }: SnackbarProps) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
-  const [typeColor, setTypeColor] = useState();
+  const [typeColor, setTypeColor] = useState<AlertColor>();
 
-  const showSnackBar = (text, color) => {
+  const showSnackBar = (text: string, color: AlertColor) => {
     setMessage(text);
     setTypeColor(color);
     setOpen(true);
