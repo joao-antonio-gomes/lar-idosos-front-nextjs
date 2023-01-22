@@ -13,8 +13,8 @@ class PatientService {
     return api.post(`/patients/`, data);
   }
 
-  static async patch(data) {
-    return api.patch(`/patients/`, data);
+  static async patch(patientId, data) {
+    return api.patch(`/patients/${patientId}`, data);
   }
 
   static async delete(patientId) {

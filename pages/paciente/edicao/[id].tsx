@@ -70,18 +70,18 @@ function PacienteEdicao() {
 
   const onSubmit = (data: FormPatientEdicaoValues): void => {
     console.log(data);
-    // PatientService.patch(data)
-    //   .then((response) => {
-    //     snackbar.showSnackBar('Paciente atualizado com sucesso', 'success');
-    //     router.push('/paciente');
-    //   })
-    //   .catch(({ response }) => {
-    //     if (response.status === 400) {
-    //       snackbar.showSnackBar(response.data.message, 'error');
-    //       return;
-    //     }
-    //     snackbar.showSnackBar('Houve um erro ao atualizar o paciente, atualize a página e tente novamente', 'error');
-    //   });
+    PatientService.patch(data.id, data)
+      .then((response) => {
+        snackbar.showSnackBar('Paciente atualizado com sucesso', 'success');
+        router.push('/paciente');
+      })
+      .catch(({ response }) => {
+        if (response.status === 400) {
+          snackbar.showSnackBar(response.data.message, 'error');
+          return;
+        }
+        snackbar.showSnackBar('Houve um erro ao atualizar o paciente, atualize a página e tente novamente', 'error');
+      });
   };
 
   return (

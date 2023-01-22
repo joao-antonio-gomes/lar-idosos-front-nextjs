@@ -116,7 +116,7 @@ function PacientePerfil() {
                     <b>Telefone:</b> {patient.phone}
                   </Typography>
                   <Typography>
-                    <b>Sexo:</b> {patient.gender === 0 ? 'Masculino' : 'Feminino'}
+                    <b>Sexo:</b> {patient.gender}
                   </Typography>
                 </Grid>
               </Grid>

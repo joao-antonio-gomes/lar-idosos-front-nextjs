@@ -16,7 +16,7 @@ const PacienteListagem = () => {
   const [patients, setPatients] = useState<Pageable>();
   const [openModalDeletePatient, setOpenModalDeletePatient] = useState(false);
   const [patientToDelete, setPatientToDelete] = useState<Patient | undefined>();
-  const [patientFilter, setPatientFilter] = useState<PageableFilter>({ page: 0, size: 10, name: undefined });
+  const [patientFilter, setPatientFilter] = useState<PageableFilter>({ page: 0, size: 10, name: undefined, sort: 'id' });
   const columns: TableColumn[] = [
     { field: 'id', headerName: 'ID', width: 70, sortable: false },
     { field: 'name', headerName: 'Nome', width: 160, sortable: false, styleRow: { textAlign: 'left' } },
