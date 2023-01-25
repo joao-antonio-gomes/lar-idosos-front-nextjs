@@ -1,4 +1,4 @@
-export default interface Pageable {
+export default interface DataPageable {
   content: Object[];
   totalElements: number;
   pageable: {

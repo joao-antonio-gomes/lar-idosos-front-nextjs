@@ -17,11 +17,8 @@ export const FormPatientCadastro = ({ onSubmit, useForm, genderList }: Props) =>
   const maxDate = dayjs().subtract(110, 'years').toDate();
 
   const {
-    register,
-    handleSubmit,
     control,
     formState: { errors },
-    reset
   } = useForm;
 
   return (

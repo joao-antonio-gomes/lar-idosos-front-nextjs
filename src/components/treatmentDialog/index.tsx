@@ -9,13 +9,19 @@ import * as Yup from 'yup';
 import FormTreatment from '../formTreatment';
 import TreatmentService from '../../service/TreatmentService';
 import { useSnackbar } from '../../context/snackbar';
+import Patient from '../../interface/Patient';
+import Medicine from '../../interface/Medicine';
 
-function TreatmentDialog({ handleClose, patient, treatment }) {
+interface Props {
+  handleClose: () => void;
+  treatment?: any;
+  patient: Patient;
+}
+
+function TreatmentDialog({ handleClose, patient, treatment }: Props) {
   const snackbar = useSnackbar();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [dosageType, setDosageType] = useState();
-  const [defaultMedicines, setDefaultMedicines] = useState([]);
-  const [medicinesList, setMedicinesList] = useState();
+  const [medicinesList, setMedicinesList] = useState<Medicine[]>([]);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Nome é obrigatório'),
@@ -31,7 +37,6 @@ function TreatmentDialog({ handleClose, patient, treatment }) {
       Yup.object().shape({
         medicine: Yup.object().required('Remédio é obrigatório').nullable(),
         dosage: Yup.number().required('Dosagem é obrigatório').typeError('Dosagem deve ser um número inteiro!'),
-        dosageType: Yup.string().required('Tipo de dosagem é obrigatório'),
         hourInterval: Yup.number()
           .required('Intervalo (horas) é obrigatório')
           .typeError('Intervalo (horas) deve ser um número inteiro!')
@@ -55,7 +60,7 @@ function TreatmentDialog({ handleClose, patient, treatment }) {
     data = {
       ...data,
       patientId: patient.id,
-      medicines: data.medicines.map((medicine) => ({ ...medicine, medicineId: medicine.medicine.id }))
+      medicines: data.medicines.map((medicine: Medicine) => ({ ...medicine, medicineId: medicine.id }))
     };
     TreatmentService.create(data)
       .then((response) => {
@@ -72,18 +77,9 @@ function TreatmentDialog({ handleClose, patient, treatment }) {
   });
 
   useEffect(() => {
-    MedicineService.getDosageType().then(({ data }) => {
-      setDosageType(data);
-    });
-    MedicineService.getAllAutocomplete().then(({ data }) => {
-      setMedicinesList(data.result);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!dosageType || !medicinesList) return;
+    if (!medicinesList) return;
     setIsLoaded(true);
-  }, [dosageType, medicinesList]);
+  }, [medicinesList]);
 
   return (
     <Dialog
@@ -119,7 +115,6 @@ function TreatmentDialog({ handleClose, patient, treatment }) {
           }}
           medicinesList={medicinesList}
           onSubmit={onSubmit}
-          dosageType={dosageType}
           handleClose={handleClose}
         />
       )}

@@ -1,7 +1,13 @@
 import { InputText } from '../inputText';
 import { Button } from '@mui/material';
 
-export const FormMedicine = ({ onSubmit, useForm }) => {
+
+interface Props {
+  onSubmit: () => void;
+  useForm: any;
+}
+
+export const FormMedicine = ({ onSubmit, useForm }: Props) => {
   const { register, control, reset } = useForm;
 
   return (
@@ -11,7 +17,6 @@ export const FormMedicine = ({ onSubmit, useForm }) => {
           <InputText
             label={'Nome'}
             name={'name'}
-            register={register}
             control={control}
           />
         </div>
@@ -20,7 +25,6 @@ export const FormMedicine = ({ onSubmit, useForm }) => {
             label={'Concentração (mg)'}
             name={'concentration'}
             propsInput={{ type: 'number' }}
-            register={register}
             control={control}
           />
         </div>
@@ -30,7 +34,6 @@ export const FormMedicine = ({ onSubmit, useForm }) => {
           <InputText
             label={'Descrição'}
             name={'description'}
-            register={register}
             control={control}
           />
         </div>

@@ -7,13 +7,13 @@ import ConfirmDialog from '../../src/components/confirmDialog';
 import { useSnackbar } from '../../src/context/snackbar';
 import TableApp from '../../src/components/tableApp/index';
 import Patient from '../../src/interface/Patient';
-import Pageable from '../../src/interface/Pageable';
+import DataPageable from '../../src/interface/DataPageable';
 import PageableFilter from '../../src/interface/PageableFilter';
 import TableColumn from '../../src/interface/TableColumn';
 
 const PacienteListagem = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [patients, setPatients] = useState<Pageable>();
+  const [patients, setPatients] = useState<DataPageable>();
   const [openModalDeletePatient, setOpenModalDeletePatient] = useState(false);
   const [patientToDelete, setPatientToDelete] = useState<Patient | undefined>();
   const [patientFilter, setPatientFilter] = useState<PageableFilter>({ page: 0, size: 10, name: undefined, sort: 'id' });

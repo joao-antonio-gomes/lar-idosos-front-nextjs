@@ -5,7 +5,7 @@ import { Control } from 'react-hook-form/dist/types';
 interface Props {
   label: string;
   name: string;
-  options: {label: string, value: string}[];
+  options: { label: string, value: string }[];
   control: Control<any, any>;
 }
 

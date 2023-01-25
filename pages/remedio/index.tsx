@@ -5,7 +5,7 @@ import { useSnackbar } from '../../src/context/snackbar';
 import ConfirmDialog from '../../src/components/confirmDialog';
 import MedicineService from '../../src/service/MedicineService';
 import Typography from '@mui/material/Typography';
-import Pageable from '../../src/interface/Pageable';
+import DataPageable from '../../src/interface/DataPageable';
 import PageableFilter from '../../src/interface/PageableFilter';
 import TableColumn from '../../src/interface/TableColumn';
 import Medicine from '../../src/interface/Medicine';
@@ -13,7 +13,7 @@ import TableApp from '../../src/components/tableApp';
 
 function RemediosListagem() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [medicines, setMedicines] = useState<Pageable>();
+  const [medicines, setMedicines] = useState<DataPageable>();
   const [openModalDeleteMedicine, setOpenModalDeleteMedicine] = useState(false);
   const [medicineToDelete, setMedicineToDelete] = useState<Medicine | undefined>();
   const [medicineFilter, setMedicineFilter] = useState<PageableFilter>({ page: 0, size: 10, name: undefined, sort: 'id' });

@@ -2,15 +2,39 @@ import React, { useEffect, useState } from 'react';
 import { InputText } from '../inputText';
 import { DatePickerApp } from '../datePickerApp';
 import AutocompleteApp from '../autocompleteApp';
-import { SelectApp } from '../selectApp';
 import { Button, DialogActions } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { useFieldArray } from 'react-hook-form';
+import Medicine from '../../interface/Medicine';
+import Patient from '../../interface/Patient';
+import SelectOption from '../../interface/SelectOption';
+import MedicineService from '../../service/MedicineService';
 
-function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, handleClose }) {
+interface Props {
+  onSubmit: () => void;
+  useForm: any;
+  medicinesList: Medicine[];
+  patient: Patient;
+  handleClose: () => void;
+}
+
+function FormTreatment({ onSubmit, useForm, patient, handleClose }: Props) {
+
+  const [medicinesOptions, setMedicinesOptions] = useState<SelectOption[]>([]);
+
+  const handleChangeAutoComplete = (event: React.SyntheticEvent<Element, Event>, value: string) => {
+    MedicineService.getAll({ page: 0, size: 10, name: value, sort: 'name' }).then((response) => {
+      setMedicinesOptions(response.data.content.map((medicine: Medicine) => {
+        return {
+          value: medicine.id,
+          label: medicine.name
+        };
+      }));
+    });
+  }
+
   const {
-    register,
     control,
     formState: { errors }
   } = useForm;
@@ -33,7 +57,7 @@ function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, 
   return (
     <form
       onSubmit={onSubmit}
-      className="mx-5">
+      className='mx-5'>
       <div className={'md:flex w-full'}>
         <div className={'mb-5 w-full md:mr-2.5'}>
           <InputText
@@ -41,7 +65,6 @@ function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, 
             name={'name'}
             propsInput={{ disabled: true }}
             defaultValue={patient.name}
-            register={register}
             control={control}
           />
         </div>
@@ -49,7 +72,6 @@ function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, 
           <InputText
             label={'Doença'}
             name={'disease'}
-            register={register}
             control={control}
           />
         </div>
@@ -59,7 +81,6 @@ function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, 
           <DatePickerApp
             label={'Inicio do Tratamento'}
             name={'beginDate'}
-            register={register}
             control={control}
           />
         </div>
@@ -67,14 +88,13 @@ function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, 
           <DatePickerApp
             label={'Fim do Tratamento'}
             name={'endDate'}
-            register={register}
             control={control}
           />
         </div>
       </div>
       <Button
-        variant="contained"
-        className="mb-4"
+        variant='contained'
+        className='mb-4'
         onClick={() => appendRemedio()}>
         Adicionar Remédio
       </Button>
@@ -82,11 +102,11 @@ function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, 
         return (
           <div key={`container-remedio-${index}`}>
             <Divider />
-            <div className="flex justify-between mt-3">
+            <div className='flex justify-between mt-3'>
               <Typography marginTop={1}>Remédio {index + 1}</Typography>
               <Button
-                variant="contained"
-                color="error"
+                variant='contained'
+                color='error'
                 onClick={() => remove(index)}>
                 Remover
               </Button>
@@ -94,12 +114,11 @@ function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, 
             <div className={'mt-3 md:flex w-full'}>
               <div className={'mb-5 w-full md:mr-2.5'}>
                 <AutocompleteApp
-                  register={register}
                   control={control}
-                  options={medicinesList}
+                  options={medicinesOptions}
                   name={`medicines.${index}.medicine`}
-                  errors={errors}
-                  label="Remédios"
+                  label='Remédios'
+                  onInputChange={handleChangeAutoComplete}
                 />
               </div>
               <div className={'mb-5 w-full md:mr-2.5'}>
@@ -107,7 +126,6 @@ function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, 
                   label={'Intervalo (horas)'}
                   name={`medicines.${index}.hourInterval`}
                   propsInput={{ type: 'number' }}
-                  register={register}
                   control={control}
                 />
               </div>
@@ -118,16 +136,6 @@ function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, 
                   label={'Dosagem'}
                   name={`medicines.${index}.dosage`}
                   propsInput={{ type: 'number' }}
-                  register={register}
-                  control={control}
-                />
-              </div>
-              <div className={'mb-5 w-full md:mr-2.5'}>
-                <SelectApp
-                  label={'Tipo da Dosagem'}
-                  name={`medicines.${index}.dosageType`}
-                  options={dosageType}
-                  register={register}
                   control={control}
                 />
               </div>
@@ -139,7 +147,7 @@ function FormTreatment({ onSubmit, useForm, medicinesList, dosageType, patient, 
       <DialogActions>
         <Button onClick={handleClose}>Cancelar</Button>
         <Button
-          type="submit"
+          type='submit'
           autoFocus>
           Cadastrar
         </Button>

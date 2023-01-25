@@ -5,10 +5,6 @@ class MedicineService {
     return api.get('/medicines', { params: { ...params } });
   }
 
-  static getAllAutocomplete(params) {
-    return api.get('/medicines/autocomplete', { params: { ...params } });
-  }
-
   static getById(patientId) {
     return api.get(`/medicines/${patientId}`);
   }
