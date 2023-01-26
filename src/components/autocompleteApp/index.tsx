@@ -49,3 +49,5 @@ export default function AutocompleteApp({ options, onInputChange, control, name,
     />
   );
 }
+
+//https://github.com/ant-design/ant-design/issues/21882

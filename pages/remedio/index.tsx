@@ -100,7 +100,7 @@ function RemediosListagem() {
     clearTimeout(delayTimer);
     delayTimer = setTimeout(function () {
       setMedicineFilter({ ...medicineFilter, name: event.target.value });
-    }, 700);
+    }, 150);
   };
 
   const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {

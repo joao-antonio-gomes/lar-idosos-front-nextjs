@@ -15,7 +15,7 @@ interface Props {
   onSubmit: () => void;
   useForm: any;
   medicinesList: Medicine[];
-  patient: Patient;
+  patient: Patient | undefined;
   handleClose: () => void;
 }
 
@@ -23,16 +23,25 @@ function FormTreatment({ onSubmit, useForm, patient, handleClose }: Props) {
 
   const [medicinesOptions, setMedicinesOptions] = useState<SelectOption[]>([]);
 
-  const handleChangeAutoComplete = (event: React.SyntheticEvent<Element, Event>, value: string) => {
+  const fetchMedicines = (value: string|undefined) => {
     MedicineService.getAll({ page: 0, size: 10, name: value, sort: 'name' }).then((response) => {
       setMedicinesOptions(response.data.content.map((medicine: Medicine) => {
         return {
           value: medicine.id,
-          label: medicine.name
+          label: `${medicine.name} - ${medicine.concentration}mg - ${medicine.type}`
         };
       }));
     });
   }
+
+  const handleChangeAutoComplete = (event: React.SyntheticEvent<Element, Event>, value: string) => {
+    fetchMedicines(value);
+  }
+
+  useEffect(() => {
+    fetchMedicines(undefined);
+  }, []);
+
 
   const {
     control,
@@ -64,7 +73,7 @@ function FormTreatment({ onSubmit, useForm, patient, handleClose }: Props) {
             label={'Nome Paciente'}
             name={'name'}
             propsInput={{ disabled: true }}
-            defaultValue={patient.name}
+            defaultValue={patient?.name}
             control={control}
           />
         </div>

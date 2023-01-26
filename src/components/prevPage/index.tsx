@@ -3,7 +3,11 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Button } from '@mui/material';
 import Link from 'next/link';
 
-const PrevPage = ({ url }) => {
+interface Props {
+  url: string;
+}
+
+const PrevPage = ({url}: Props) => {
   return (
     <div style={{ cursor: 'pointer', display: 'flex', width: '100px' }}>
       <Link href={url}>

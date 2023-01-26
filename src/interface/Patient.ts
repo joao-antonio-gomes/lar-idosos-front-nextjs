@@ -1,4 +1,5 @@
 export default interface Patient {
+  avatar?: string;
   id: number;
   name: string;
   cpf: string;

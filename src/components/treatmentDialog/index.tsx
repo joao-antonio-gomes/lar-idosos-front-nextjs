@@ -15,7 +15,7 @@ import Medicine from '../../interface/Medicine';
 interface Props {
   handleClose: () => void;
   treatment?: any;
-  patient: Patient;
+  patient: Patient | undefined
 }
 
 function TreatmentDialog({ handleClose, patient, treatment }: Props) {
@@ -59,7 +59,7 @@ function TreatmentDialog({ handleClose, patient, treatment }: Props) {
   const onSubmit = handleSubmit((data) => {
     data = {
       ...data,
-      patientId: patient.id,
+      patientId: patient?.id,
       medicines: data.medicines.map((medicine: Medicine) => ({ ...medicine, medicineId: medicine.id }))
     };
     TreatmentService.create(data)
@@ -88,7 +88,7 @@ function TreatmentDialog({ handleClose, patient, treatment }: Props) {
       fullWidth={true}
       maxWidth={'sm'}>
       <DialogTitle>
-        {treatment ? `Tratamento ${patient.name} para ${treatment.disease.name}` : 'Novo Tratamento'}
+        {treatment ? `Tratamento ${patient?.name} para ${treatment.disease.name}` : 'Novo Tratamento'}
         <IconButton
           aria-label="close"
           onClick={handleClose}

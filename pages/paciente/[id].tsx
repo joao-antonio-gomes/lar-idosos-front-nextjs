@@ -1,4 +1,4 @@
-import { Avatar, Container, Grid, Popover } from '@mui/material';
+import { Avatar, Button, Container, Grid, Popover } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import PatientService from '../../src/service/PatientService';
 import { useRouter } from 'next/router';
@@ -13,21 +13,50 @@ import moment from 'moment';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import TreatmentDialog from '../../src/components/treatmentDialog';
-import TreatmentCard from '../../src/components/treatmentCard';
+import Link from 'next/link';
+import Patient from '../../src/interface/Patient';
+import ConfirmDialog from '../../src/components/confirmDialog';
 
 function PacientePerfil() {
   const router = useRouter();
-  const [patient, setPatient] = useState();
+  const [patient, setPatient] = useState<Patient>();
   const [treatments, setTreatments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const snackbar = useSnackbar();
   const [openModalTreatment, setOpenModalTreatment] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [openModalDeletePatient, setOpenModalDeletePatient] = useState(false);
+  const [patientToDelete, setPatientToDelete] = useState<Patient | undefined>();
   const openPopover = Boolean(anchorEl);
 
-  const handlePopoverOpen = (event) => {
+  const handleDeletePatient = (patient: Patient | undefined) => {
+    PatientService.delete(patient?.id)
+      .then((response) => {
+        snackbar.showSnackBar('Paciente excluído com sucesso', 'success');
+        router.push('/paciente');
+      })
+      .catch(({ response }) => {
+        if (response.data.message) {
+          snackbar.showSnackBar(response.data.message, 'error');
+          return;
+        }
+        snackbar.showSnackBar('Houve um erro ao excluir o paciente, atualize a página e tente novamente', 'error');
+      })
+      .finally(() => {
+        setOpenModalDeletePatient(false);
+      });
+  };
+
+  const handleOpenModalDeletePatient = (patient: Patient | undefined) => {
+    if (!patient) return;
+    setOpenModalDeletePatient(true);
+    setPatientToDelete(patient);
+  };
+
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handlePopoverClose = () => {
     setAnchorEl(null);
   };
@@ -35,7 +64,6 @@ function PacientePerfil() {
   useEffect(() => {
     if (router.isReady) {
       const { id } = router.query;
-      if (!id) return null;
       setIsLoading(true);
       PatientService.getById(id)
         .then(({ data }) => {
@@ -45,11 +73,11 @@ function PacientePerfil() {
           };
           setPatient(data);
           setTreatments(data.treatments);
-          setIsLoading(false);
         })
         .catch((error) =>
           snackbar.showSnackBar('Houve um erro ao carregar os dados, atualize a página e tente novamente', 'error')
-        );
+        )
+        .finally(() => setIsLoading(false));
     }
   }, [router.isReady]);
 
@@ -67,10 +95,31 @@ function PacientePerfil() {
           <>
             <Grid
               container
-              alignItems={'center'}
+              justifyContent={'space-between'}
               marginBottom={1}>
-              <PersonPinSharpIcon sx={{ width: 25, height: 25, marginRight: 1 }} />
-              <Typography>Informações Pessoais</Typography>
+              <div style={{display: 'flex', alignItems: 'center', width: '30%', }}>
+                <PersonPinSharpIcon sx={{ width: 25, height: 25, marginRight: 1 }} />
+                <Typography>Informações Pessoais</Typography>
+              </div>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '15%', }}>
+                <Link href={'/paciente/edicao/' + patient?.id}>
+                  <Button
+                    variant='contained'
+                    size={'small'}
+                    style={{ fontWeight: 'bold' }}
+                    color={'success'}>
+                    Editar
+                  </Button>
+                </Link>
+                <Button
+                  variant='contained'
+                  size={'small'}
+                  style={{ fontWeight: 'bold' }}
+                  onClick={() => handleOpenModalDeletePatient(patient)}
+                  color={'error'}>
+                  Excluir
+                </Button>
+              </div>
             </Grid>
             <Divider sx={{ marginBottom: 2 }} />
             <Grid
@@ -81,16 +130,16 @@ function PacientePerfil() {
               <Grid
                 item
                 flexGrow={1}>
-                {patient.avatar ? (
+                {patient?.avatar ? (
                   <Avatar
                     sx={{ width: 120, height: 120 }}
-                    alt={patient.name}
+                    alt={patient?.name}
                     src="/static/images/avatar/1.jpg"
                   />
                 ) : (
                   <Avatar sx={{ width: 120, height: 120 }}>
                     <Typography variant={'h2'}>
-                      {patient.name.split(' ')[0][0] + patient.name.split(' ')[1][0]}
+                      {patient ? patient.name.split(' ')[0][0] + patient.name.split(' ')[1][0] : ''}
                     </Typography>
                   </Avatar>
                 )}
@@ -104,19 +153,16 @@ function PacientePerfil() {
                   justifyContent={'start'}
                   flexDirection={'column'}>
                   <Typography>
-                    <b>Nome:</b> {patient.name}
+                    <b>Nome:</b> {patient?.name}
                   </Typography>
                   <Typography>
-                    <b>Nascimento:</b> {moment(patient.birthDate).format('DD/MM/YYYY')}
+                    <b>Nascimento:</b> {moment(patient?.birthDate).format('DD/MM/YYYY')}
                   </Typography>
                   <Typography>
-                    <b>CPF:</b> {patient.cpf}
+                    <b>CPF:</b> {patient?.cpf}
                   </Typography>
                   <Typography>
-                    <b>Telefone:</b> {patient.phone}
-                  </Typography>
-                  <Typography>
-                    <b>Sexo:</b> {patient.gender}
+                    <b>Sexo:</b> {patient?.sex}
                   </Typography>
                 </Grid>
               </Grid>
@@ -178,6 +224,16 @@ function PacientePerfil() {
           />
         )}
       </Container>
+      {openModalDeletePatient && (
+        <ConfirmDialog
+          textButtonAgree={'Sim'}
+          textButtonCancel={'Cancelar'}
+          dialogTitle={`Você deseja excluir o paciente ${patientToDelete?.name}?`}
+          dialogText={'Essa ação é irreversível e irá excluir todos os dados do paciente na clínica.'}
+          handleAgree={() => handleDeletePatient(patientToDelete)}
+          handleClose={() => setOpenModalDeletePatient(false)}
+        />
+      )}
     </>
   );
 }
