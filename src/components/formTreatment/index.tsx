@@ -126,14 +126,14 @@ function FormTreatment({ onSubmit, useForm, patient, handleClose }: Props) {
                   control={control}
                   options={medicinesOptions}
                   name={`medicines.${index}.medicine`}
-                  label='Remédios'
+                  label='Remédio'
                   onInputChange={handleChangeAutoComplete}
                 />
               </div>
-              <div className={'mb-5 w-full md:mr-2.5'}>
+              <div className={'mb-5 w-1/2 md:mr-2.5'}>
                 <InputText
-                  label={'Intervalo (horas)'}
-                  name={`medicines.${index}.hourInterval`}
+                  label={'Dosagem'}
+                  name={`medicines.${index}.dosage`}
                   propsInput={{ type: 'number' }}
                   control={control}
                 />
@@ -142,9 +142,33 @@ function FormTreatment({ onSubmit, useForm, patient, handleClose }: Props) {
             <div className={'md:flex w-full'}>
               <div className={'mb-5 w-full md:mr-2.5'}>
                 <InputText
-                  label={'Dosagem'}
-                  name={`medicines.${index}.dosage`}
+                  label={'Intervalo (minutos)'}
+                  name={`medicines.${index}.hourInterval`}
                   propsInput={{ type: 'number' }}
+                  control={control}
+                />
+              </div>
+              <div className={'mb-5 w-full md:mr-2.5'}>
+                <InputText
+                  label={'Dosagem'}
+                  name={`medicines.${index}.begin_hour`}
+                  propsInput={{ type: 'number' }}
+                  control={control}
+                />
+              </div>
+            </div>
+            <div className={'md:flex w-full'}>
+              <div className={'mb-5 w-full md:mr-2.5'}>
+                <DatePickerApp
+                  label={'Data Início Medicação'}
+                  name={`medicines.${index}.begin_date`}
+                  control={control}
+                />
+              </div>
+              <div className={'mb-5 w-full md:mr-2.5'}>
+                <DatePickerApp
+                  label={'Data Fim Medicação'}
+                  name={`medicines.${index}.end_date`}
                   control={control}
                 />
               </div>

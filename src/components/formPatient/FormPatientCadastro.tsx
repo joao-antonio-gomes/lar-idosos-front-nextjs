@@ -10,9 +10,10 @@ interface Props {
   onSubmit: () => void;
   useForm: any;
   genderList: Enum[];
+  maritalStatusList: Enum[];
 }
 
-export const FormPatientCadastro = ({ onSubmit, useForm, genderList }: Props) => {
+export const FormPatientCadastro = ({ onSubmit, useForm, genderList, maritalStatusList }: Props) => {
   const minDate = dayjs().subtract(60, 'years').toDate();
   const maxDate = dayjs().subtract(110, 'years').toDate();
 
@@ -39,6 +40,17 @@ export const FormPatientCadastro = ({ onSubmit, useForm, genderList }: Props) =>
             control={control}
           />
         </div>
+      </div>
+      <div className={'md:flex w-full'}>
+        <div className={'mb-5 w-full'}>
+          <DatePickerApp
+            minDate={minDate}
+            maxDate={maxDate}
+            name={'birthDate'}
+            label={'Nascimento'}
+            control={control}
+          />
+        </div>
         <div className={'mb-5 w-full md:ml-2.5'}>
           <SelectApp
             label={'Gênero'}
@@ -47,14 +59,11 @@ export const FormPatientCadastro = ({ onSubmit, useForm, genderList }: Props) =>
             control={control}
           />
         </div>
-      </div>
-      <div className={'md:flex w-full'}>
-        <div className={'mb-5 w-full md:mr-2.5'}>
-          <DatePickerApp
-            minDate={minDate}
-            maxDate={maxDate}
-            name={'birthDate'}
-            label={'Nascimento'}
+        <div className={'mb-5 w-full md:ml-2.5'}>
+          <SelectApp
+            label={'Estado civil'}
+            name={'marital_status'}
+            options={maritalStatusList}
             control={control}
           />
         </div>

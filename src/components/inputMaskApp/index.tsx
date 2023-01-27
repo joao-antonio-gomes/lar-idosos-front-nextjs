@@ -1,27 +1,33 @@
 import InputMask from 'react-input-mask';
-import { TextField } from '@mui/material';
 import { Controller } from 'react-hook-form';
+import { TextField } from '@mui/material';
 
-export function InputMaskApp({ mask, name, label, control }) {
+interface Props {
+  mask: string;
+  control: any;
+  name: string;
+  label: string;
+}
+
+export function InputMaskApp({ mask, name, label, control }: Props) {
   return (
     <Controller
       name={name}
       control={control}
+      defaultValue=''
       render={({ field, fieldState: { error } }) => {
         return (
           <InputMask
             mask={mask}
             {...field}>
-            {() => (
-              <TextField
-                className={'w-full'}
-                id="outlined-basic"
-                label={label}
-                variant="outlined"
-                error={!!error}
-                helperText={error ? error.message : null}
-              />
-            )}
+            <TextField
+              className={'w-full'}
+              id='outlined-basic'
+              label={label}
+              variant='outlined'
+              error={!!error}
+              helperText={error ? error.message : null}
+            />
           </InputMask>
         );
       }}

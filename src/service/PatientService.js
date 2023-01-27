@@ -10,7 +10,7 @@ class PatientService {
   }
 
   static async create(data) {
-    return api.post(`/patients/`, data);
+    return api.post(`/patients`, data);
   }
 
   static async patch(patientId, data) {

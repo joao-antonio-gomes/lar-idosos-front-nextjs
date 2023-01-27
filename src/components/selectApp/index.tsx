@@ -7,12 +7,14 @@ interface Props {
   name: string;
   options: { label: string, value: string }[];
   control: Control<any, any>;
+  defaultValue?: string;
 }
 
-export function SelectApp({ label, control, options, name }: Props) {
+export function SelectApp({ label, control, options, name, defaultValue }: Props) {
   return (
     <Controller
       name={name}
+      defaultValue={defaultValue ? defaultValue : ''}
       control={control}
       render={({ field, fieldState: { error } }) => {
         return (

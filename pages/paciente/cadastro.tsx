@@ -9,9 +9,12 @@ import UserService from '../../src/service/UserService';
 import { useSnackbar } from '../../src/context/snackbar';
 import { useRouter } from 'next/router';
 import { FormPatientCadastro } from '../../src/components/formPatient/FormPatientCadastro';
+import { validateBr } from 'js-brasil';
+import Enum from '../../src/interface/Enum';
 
 function PacienteCadastro() {
-  const [genderList, setGenderList] = useState(null);
+  const [genderList, setGenderList] = useState<Enum[]>([]);
+  const [maritalStatusList, setMaritalStatusList] = useState<Enum[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const snackbar = useSnackbar();
   const router = useRouter();
@@ -20,22 +23,25 @@ function PacienteCadastro() {
 
   useEffect(() => {
     UserService.getGender().then(({ data }) => setGenderList(data));
+    UserService.getMaritalStatus().then(({ data }) => setMaritalStatusList(data));
   }, []);
 
   useEffect(() => {
-    if (genderList === null) return;
+    if (genderList.length < 1 && maritalStatusList.length < 1) return;
     setIsLoaded(true);
   }, [genderList]);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Nome é obrigatório'),
-    cpf: Yup.string().required('CPF é obrigatório'),
+    cpf: Yup.string().required('CPF é obrigatório').test('cpf', 'CPF inválido', (value) => {
+      if (!value) return false;
+      return validateBr.cpf(value);
+    }),
     birthDate: Yup.date()
       .required('Data de nascimento é obrigatório')
       .max(minDate, `Data mínima ${minDate.format('DD/MM/YYYY')}`)
       .min(maxDate, `Data máxima ${maxDate.format('DD/MM/YYYY')}`)
       .typeError('Data inválida'),
-    phone: Yup.string().required('Celular é obrigatório'),
     gender: Yup.string().required('Gênero é obrigatório')
   });
 
@@ -49,6 +55,7 @@ function PacienteCadastro() {
   });
 
   const onSubmit = handleSubmit((data) => {
+    console.log(data);
     PatientService.create(data)
       .then((response) => {
         snackbar.showSnackBar('Paciente cadastrado com sucesso', 'success');
@@ -74,6 +81,7 @@ function PacienteCadastro() {
       {isLoaded && (
         <FormPatientCadastro
           genderList={genderList}
+          maritalStatusList={maritalStatusList}
           useForm={{
             register,
             handleSubmit,

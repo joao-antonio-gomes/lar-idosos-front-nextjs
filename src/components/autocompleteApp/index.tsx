@@ -26,10 +26,8 @@ export default function AutocompleteApp({ options, onInputChange, control, name,
           <Autocomplete
             id='multiple-limit-tags'
             options={options}
-            value={value}
             onChange={onChange}
             onInputChange={onInputChange}
-            isOptionEqualToValue={(option, value) => option.value === value.value}
             renderInput={(params) => {
               return (
                 <TextField
@@ -49,5 +47,3 @@ export default function AutocompleteApp({ options, onInputChange, control, name,
     />
   );
 }
-
-//https://github.com/ant-design/ant-design/issues/21882

@@ -101,12 +101,12 @@ function PacientePerfil() {
                 <PersonPinSharpIcon sx={{ width: 25, height: 25, marginRight: 1 }} />
                 <Typography>Informações Pessoais</Typography>
               </div>
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '15%', }}>
+              <div style={{display: 'flex', alignItems: 'center' }}>
                 <Link href={'/paciente/edicao/' + patient?.id}>
                   <Button
                     variant='contained'
                     size={'small'}
-                    style={{ fontWeight: 'bold' }}
+                    style={{ fontWeight: 'bold', marginRight: '10px' }}
                     color={'success'}>
                     Editar
                   </Button>

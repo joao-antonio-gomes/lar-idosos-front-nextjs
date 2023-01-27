@@ -15,7 +15,7 @@ export function InputText({ label, name, control, defaultValue, propsInput, help
   return (
     <Controller
       name={name}
-      defaultValue={defaultValue ? defaultValue : null}
+      defaultValue={defaultValue ? defaultValue : ''}
       control={control}
       render={({ field, fieldState: { error } }) => {
         return (
