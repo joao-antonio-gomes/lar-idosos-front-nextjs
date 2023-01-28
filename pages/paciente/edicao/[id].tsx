@@ -4,7 +4,7 @@ import PatientService from '../../../src/service/PatientService';
 import { Button, Container, Typography } from '@mui/material';
 import { useSnackbar } from '../../../src/context/snackbar';
 import dayjs from 'dayjs';
-import UserService from '../../../src/service/UserService';
+import PersonService from '../../../src/service/PersonService';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import { NextRouter } from 'next/dist/shared/lib/router/router';
@@ -56,7 +56,7 @@ function PacienteEdicao() {
     const { id } = router.query;
     if (!id) return;
 
-    UserService.getGender().then(({ data }) => setGenderList(data));
+    PersonService.getGender().then(({ data }) => setGenderList(data));
     PatientService.getById(id).then(({ data }) => {
       setPatient(data);
     });

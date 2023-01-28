@@ -5,10 +5,10 @@ import * as Yup from 'yup';
 import dayjs from 'dayjs';
 import PatientService from '../../src/service/PatientService';
 import { useEffect, useState } from 'react';
-import UserService from '../../src/service/UserService';
+import PersonService from '../../src/service/PersonService';
 import { useSnackbar } from '../../src/context/snackbar';
 import { useRouter } from 'next/router';
-import { FormPatientCadastro } from '../../src/components/formPatient/FormPatientCadastro';
+import { Index } from '../../src/components/formPatient';
 import { validateBr } from 'js-brasil';
 import Enum from '../../src/interface/Enum';
 
@@ -22,8 +22,8 @@ function PacienteCadastro() {
   const maxDate = dayjs().subtract(110, 'years');
 
   useEffect(() => {
-    UserService.getGender().then(({ data }) => setGenderList(data));
-    UserService.getMaritalStatus().then(({ data }) => setMaritalStatusList(data));
+    PersonService.getGender().then(({ data }) => setGenderList(data));
+    PersonService.getMaritalStatus().then(({ data }) => setMaritalStatusList(data));
   }, []);
 
   useEffect(() => {
@@ -79,7 +79,7 @@ function PacienteCadastro() {
         Cadastro de Paciente
       </Typography>
       {isLoaded && (
-        <FormPatientCadastro
+        <Index
           genderList={genderList}
           maritalStatusList={maritalStatusList}
           useForm={{

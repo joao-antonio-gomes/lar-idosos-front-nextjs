@@ -5,6 +5,10 @@ import { DatePickerApp } from '../datePickerApp';
 import { Button } from '@mui/material';
 import dayjs from 'dayjs';
 import Enum from '../../interface/Enum';
+import AutocompleteApp from '../autocompleteApp';
+import React, { useState } from 'react';
+import UserService from '../../service/UserService';
+import User from '../../interface/User';
 
 interface Props {
   onSubmit: () => void;
@@ -13,7 +17,7 @@ interface Props {
   maritalStatusList: Enum[];
 }
 
-export const FormPatientCadastro = ({ onSubmit, useForm, genderList, maritalStatusList }: Props) => {
+export const Index = ({ onSubmit, useForm, genderList, maritalStatusList }: Props) => {
   const minDate = dayjs().subtract(60, 'years').toDate();
   const maxDate = dayjs().subtract(110, 'years').toDate();
 
@@ -21,6 +25,19 @@ export const FormPatientCadastro = ({ onSubmit, useForm, genderList, maritalStat
     control,
     formState: { errors },
   } = useForm;
+
+  const [responsableOptions, setResponsableOptions] = useState([]);
+
+  function handleChangeAutoComplete(event: React.SyntheticEvent<Element, Event>, value: string) {
+    UserService.getAllResponsible({ page: 0, size: 10, name: value, sort: 'name' }).then((response) => {
+      setResponsableOptions(response.data.content.map((user: User) => {
+        return {
+          value: user.id,
+          label: `${user.name}`
+        };
+      }));
+    });
+  }
 
   return (
     <form onSubmit={onSubmit}>
@@ -32,12 +49,21 @@ export const FormPatientCadastro = ({ onSubmit, useForm, genderList, maritalStat
             control={control}
           />
         </div>
-        <div className={'mb-5 w-full md:ml-2.5'}>
+        <div className={'mb-5 w-full '}>
           <InputMaskApp
             mask={'999.999.999-99'}
             label={'CPF'}
             name={'cpf'}
             control={control}
+          />
+        </div>
+        <div className={'mb-5 w-full md:ml-2.5'}>
+          <AutocompleteApp
+            control={control}
+            options={responsableOptions}
+            name={`userId`}
+            label='Responsável'
+            onInputChange={handleChangeAutoComplete}
           />
         </div>
       </div>

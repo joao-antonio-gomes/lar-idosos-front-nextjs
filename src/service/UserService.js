@@ -1,13 +1,9 @@
 import { api } from './api';
 
-class PatientService {
-  static getGender() {
-    return api.get('/persons/genders');
-  }
-
-  static getMaritalStatus() {
-    return api.get('/persons/marital-status');
+class UserService {
+  static async getAllResponsible(params) {
+    return api.get('/users/responsibles', { params: { ...params } });
   }
 }
 
-export default PatientService;
+export default UserService;
