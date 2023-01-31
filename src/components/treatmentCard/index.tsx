@@ -4,8 +4,13 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import moment from 'moment';
 import Divider from '@mui/material/Divider';
+import Medicine from '../../interface/Medicine';
 
-export default function TreatmentCard({ treatment }) {
+interface Props {
+  treatment: any;
+}
+
+export default function TreatmentCard({ treatment }: Props) {
   return (
     <Card sx={{ width: 250, height: 220 }}>
       <CardContent>
@@ -22,7 +27,7 @@ export default function TreatmentCard({ treatment }) {
         </Typography>
         <div className="mt-3 overflow-y-auto h-32">
           {treatment.medsTreatment.length > 0 ? (
-            treatment.medsTreatment.map((med, index) => (
+            treatment.medsTreatment.map((med: any, index: number) => (
               <>
                 <Divider />
                 <Typography

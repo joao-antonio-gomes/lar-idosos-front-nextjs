@@ -15,7 +15,7 @@ import { InputMaskApp } from '../../../src/components/inputMaskApp';
 import { SelectApp } from '../../../src/components/selectApp';
 import { DatePickerApp } from '../../../src/components/datePickerApp';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormPatientEdicao } from '../../../src/components/formPatient/FormPatientEdicao';
+import { Index } from '../../../src/components/formPatient';
 
 function PacienteEdicao() {
   const minDate = dayjs().subtract(60, 'years');
@@ -93,7 +93,7 @@ function PacienteEdicao() {
         Edição de Paciente
       </Typography>
       {isLoaded && (
-        <FormPatientEdicao
+        <Index
           genderList={genderList}
           useForm={{
             register,

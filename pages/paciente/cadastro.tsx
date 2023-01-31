@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import PersonService from '../../src/service/PersonService';
 import { useSnackbar } from '../../src/context/snackbar';
 import { useRouter } from 'next/router';
-import { Index } from '../../src/components/formPatient';
+import { FormPatientCadastro } from '../../src/components/formPatientCadastro';
 import { validateBr } from 'js-brasil';
 import Enum from '../../src/interface/Enum';
 
@@ -79,7 +79,7 @@ function PacienteCadastro() {
         Cadastro de Paciente
       </Typography>
       {isLoaded && (
-        <Index
+        <FormPatientCadastro
           genderList={genderList}
           maritalStatusList={maritalStatusList}
           useForm={{
