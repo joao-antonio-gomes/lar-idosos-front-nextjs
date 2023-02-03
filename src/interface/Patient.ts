@@ -4,7 +4,8 @@ export default interface Patient {
   name: string;
   cpf: string;
   birthDate: Date;
-  age: number;
-  sex: string;
+  age?: number;
+  gender: string;
   maritalStatus: string;
+  responsibleId: number|null;
 }

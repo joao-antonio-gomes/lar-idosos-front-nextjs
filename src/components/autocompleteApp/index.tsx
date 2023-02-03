@@ -10,29 +10,33 @@ interface Props {
   name: string;
   options: SelectOption[];
   control: Control<any, any>;
-  defaultValue?: SelectOption;
   onInputChange: (e: React.SyntheticEvent<Element, Event>, value: string) => void;
 }
 
-export default function AutocompleteApp({ options, onInputChange, control, name, defaultValue = undefined, label }: Props) {
+export default function AutocompleteApp({ options, onInputChange, control, name, label }: Props) {
 
   return (
     <Controller
       name={name}
       control={control}
-      defaultValue={defaultValue}
-      render={({ fieldState: { error }, field: { value, ref, onChange, ...field } }) => {
+      render={({ fieldState: { error }, field: { ref, onChange, value, ...field } }) => {
         return (
           <Autocomplete
-            id='multiple-limit-tags'
+            value={value || null}
             options={options}
-            onChange={onChange}
+            onChange={(event, value) => {
+              onChange(value);
+              return value;
+            }}
             onInputChange={onInputChange}
+            isOptionEqualToValue={(option, value) => option.value === value.value}
+            getOptionLabel={(option) => {
+              return option.label || '';
+            }}
             renderInput={(params) => {
               return (
                 <TextField
                   {...params}
-                  {...field}
                   inputRef={ref}
                   label={label}
                   error={!!error}
@@ -41,6 +45,7 @@ export default function AutocompleteApp({ options, onInputChange, control, name,
               );
             }}
             sx={{ width: '100%' }}
+            noOptionsText="Nenhum resultado encontrado"
           />
         );
       }}

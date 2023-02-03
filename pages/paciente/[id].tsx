@@ -162,7 +162,7 @@ function PacientePerfil() {
                     <b>CPF:</b> {patient?.cpf}
                   </Typography>
                   <Typography>
-                    <b>Sexo:</b> {patient?.sex}
+                    <b>Sexo:</b> {patient?.gender}
                   </Typography>
                 </Grid>
               </Grid>

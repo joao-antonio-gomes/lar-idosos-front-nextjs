@@ -6,7 +6,7 @@ import { Button } from '@mui/material';
 import dayjs from 'dayjs';
 import Enum from '../../interface/Enum';
 import AutocompleteApp from '../autocompleteApp';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UserService from '../../service/UserService';
 import User from '../../interface/User';
 
@@ -28,7 +28,7 @@ export const FormPatientCadastro = ({ onSubmit, useForm, genderList, maritalStat
 
   const [responsableOptions, setResponsableOptions] = useState([]);
 
-  function handleChangeAutoComplete(event: React.SyntheticEvent<Element, Event>, value: string) {
+  function fetchResponsible(value: string) {
     UserService.getAllResponsible({ page: 0, size: 10, name: value, sort: 'name' }).then((response) => {
       setResponsableOptions(response.data.content.map((user: User) => {
         return {
@@ -38,6 +38,15 @@ export const FormPatientCadastro = ({ onSubmit, useForm, genderList, maritalStat
       }));
     });
   }
+
+  function handleChangeAutoComplete(event: React.SyntheticEvent<Element, Event>, value: string) {
+    fetchResponsible(value);
+  }
+
+  useEffect(() => {
+    fetchResponsible('');
+  }, []);
+
 
   return (
     <form onSubmit={onSubmit}>
@@ -61,7 +70,7 @@ export const FormPatientCadastro = ({ onSubmit, useForm, genderList, maritalStat
           <AutocompleteApp
             control={control}
             options={responsableOptions}
-            name={`userId`}
+            name={`responsible`}
             label='Responsável'
             onInputChange={handleChangeAutoComplete}
           />
