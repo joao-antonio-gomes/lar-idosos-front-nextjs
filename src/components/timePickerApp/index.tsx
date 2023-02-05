@@ -1,10 +1,10 @@
 import { TextField } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Controller } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { Control } from 'react-hook-form/dist/types';
+import { TimePicker } from '@mui/x-date-pickers';
 
 interface Props {
   label: string;
@@ -13,13 +13,9 @@ interface Props {
   defaultValue?: string;
   propsInput?: any;
   control: Control<any, any>;
-  minDate?: Date;
-  maxDate?: Date;
-  disableFuture?: boolean;
-  openTo?: 'day' | 'month' | 'year';
 }
 
-export function DatePickerApp({ label, control, name, minDate, maxDate, disableFuture = true, openTo = 'year' }: Props) {
+export function TimePickerApp({ label, control, name }: Props) {
   return (
     <>
       <Controller
@@ -29,17 +25,15 @@ export function DatePickerApp({ label, control, name, minDate, maxDate, disableF
         render={({ field: { onChange, value }, fieldState: { error } }) => {
           return (
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
+              <TimePicker
                 className={'w-full'}
-                disableFuture={disableFuture}
                 label={label}
-                openTo={openTo}
-                inputFormat={'DD/MM/YYYY'}
-                maxDate={minDate}
-                minDate={maxDate}
-                mask={'__/__/____'}
                 value={value}
-                onChange={(value) => onChange(dayjs(value))}
+                ampm={false}
+                ampmInClock={false}
+                onChange={(value) => {
+                  onChange(dayjs(value).format('HH:mm:ss'));
+                }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
