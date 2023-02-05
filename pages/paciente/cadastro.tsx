@@ -42,7 +42,8 @@ function PacienteCadastro() {
       .max(minDate, `Data mínima ${minDate.format('DD/MM/YYYY')}`)
       .min(maxDate, `Data máxima ${maxDate.format('DD/MM/YYYY')}`)
       .typeError('Data inválida'),
-    gender: Yup.string().required('Gênero é obrigatório')
+    gender: Yup.string().required('Gênero é obrigatório'),
+    maritalStatus: Yup.string().required('Estado civil é obrigatório'),
   });
 
   const {
@@ -55,7 +56,12 @@ function PacienteCadastro() {
   });
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    data = {
+      ...data,
+      responsible: {
+        id: data.responsible?.value ? Number(data.responsible.value) : undefined,
+      }
+    }
     PatientService.create(data)
       .then((response) => {
         snackbar.showSnackBar('Paciente cadastrado com sucesso', 'success');

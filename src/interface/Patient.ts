@@ -1,3 +1,5 @@
+import User from './User';
+
 export default interface Patient {
   avatar?: string;
   id: number;
@@ -7,5 +9,5 @@ export default interface Patient {
   age?: number;
   gender: string;
   maritalStatus: string;
-  responsibleId: number|null;
+  responsible?: User;
 }

@@ -97,7 +97,7 @@ export const FormPatientCadastro = ({ onSubmit, useForm, genderList, maritalStat
         <div className={'mb-5 w-full md:ml-2.5'}>
           <SelectApp
             label={'Estado civil'}
-            name={'marital_status'}
+            name={'maritalStatus'}
             options={maritalStatusList}
             control={control}
           />

@@ -22,16 +22,6 @@ import Patient from '../../interface/Patient';
 import { AxiosResponse } from 'axios';
 import SelectOption from '../../interface/SelectOption';
 
-const initialValues: FormPatientEdicaoValues = {
-  id: 0,
-  name: '',
-  cpf: '',
-  birthDate: new Date(),
-  gender: '',
-  maritalStatus: '',
-  responsible: { value: 1, label: 'Responsável' }
-}
-
 export const FormPatientEdicao = () => {
   const minDate = dayjs().subtract(60, 'years');
   const maxDate = dayjs().subtract(110, 'years');
@@ -39,6 +29,15 @@ export const FormPatientEdicao = () => {
   const snackbar = useSnackbar();
   const router: NextRouter = useRouter();
 
+  const [initialValues, setInitialValues] = useState<FormPatientEdicaoValues>({
+    id: 0,
+    name: '',
+    cpf: '',
+    birthDate: new Date(),
+    gender: '',
+    maritalStatus: '',
+    responsible: { value: 1, label: 'Responsável' }
+  });
   const [isLoaded, setIsLoaded] = useState(false);
   const [responsibleOptions, setResponsibleOptions] = useState<SelectOption[]>([]);
   const [genderList, setGenderList] = useState<Enum[]>([]);
@@ -81,21 +80,28 @@ export const FormPatientEdicao = () => {
   }
 
   function fetchDefaultResponsible(patient: Patient, response: AxiosResponse<any>) {
-    if (!patient || patient.responsibleId == undefined) return;
+    if (!patient || !patient.responsible) return;
 
-    UserService.getResponsibleById(patient.responsibleId).then(({ data }) => {
+    UserService.getResponsibleById(patient.responsible?.id).then(({ data }) => {
       const responsible: SelectOption = {
         value: Number(data.id),
         label: data.name
       };
 
-      const formValue: FormPatientEdicaoValues = {
-        ...patient,
-        responsible: responsible
-      };
-
-      reset(formValue);
+      setInitialValues({
+      ...patient,
+          responsible: responsible
+      });
     });
+  }
+
+  function mountResponsible(patient: Patient): SelectOption | undefined {
+    if (!patient || !patient.responsible) return;
+
+    return {
+      value: Number(patient.responsible.id),
+      label: patient.responsible.name || ''
+    };
   }
 
   useEffect(() => {
@@ -109,16 +115,31 @@ export const FormPatientEdicao = () => {
     PatientService.getById(id).then((response) => {
       const patient: Patient = response.data;
 
-      fetchDefaultResponsible(patient, response);
+      setInitialValues({
+        id: patient.id,
+        name: patient.name,
+        cpf: patient.cpf,
+        birthDate: patient.birthDate,
+        gender: patient.gender,
+        maritalStatus: patient.maritalStatus,
+        responsible: mountResponsible(patient)
+      });
       setIsLoaded(true);
     });
   }, [router.isReady]);
 
+  useEffect(() => {
+    reset(initialValues);
+  }, [initialValues]);
+
   const onSubmit = (data: FormPatientEdicaoValues): void => {
     const patient: Patient = {
       ...data,
-      responsibleId: data.responsible?.value ? Number(data.responsible.value) : null
+      responsible: {
+        id: data.responsible?.value ? Number(data.responsible.value) : undefined,
+      }
     }
+    console.log(patient);
     PatientService.patch(data.id, patient)
       .then((response) => {
         snackbar.showSnackBar('Paciente atualizado com sucesso', 'success');
@@ -201,3 +222,4 @@ export const FormPatientEdicao = () => {
     </>
   );
 };
+
