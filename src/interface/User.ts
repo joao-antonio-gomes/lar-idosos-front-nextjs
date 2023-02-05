@@ -6,4 +6,6 @@ export default interface User {
   birthDate?: Date;
   gender?: string;
   maritalStatus?: string;
+  phone?: string;
+  address?: string;
 }

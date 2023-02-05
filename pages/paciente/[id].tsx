@@ -16,6 +16,7 @@ import TreatmentDialog from '../../src/components/treatmentDialog';
 import Link from 'next/link';
 import Patient from '../../src/interface/Patient';
 import ConfirmDialog from '../../src/components/confirmDialog';
+import { capitalize, formataCpf } from '../../src/service/Utils';
 
 function PacientePerfil() {
   const router = useRouter();
@@ -67,10 +68,6 @@ function PacientePerfil() {
       setIsLoading(true);
       PatientService.getById(id)
         .then(({ data }) => {
-          data = {
-            ...data,
-            cpf: data.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
-          };
           setPatient(data);
           setTreatments(data.treatments);
         })
@@ -159,10 +156,91 @@ function PacientePerfil() {
                     <b>Nascimento:</b> {moment(patient?.birthDate).format('DD/MM/YYYY')}
                   </Typography>
                   <Typography>
-                    <b>CPF:</b> {patient?.cpf}
+                    <b>CPF:</b> {formataCpf(patient?.cpf)}
                   </Typography>
                   <Typography>
-                    <b>Sexo:</b> {patient?.gender}
+                    <b>Sexo:</b> {capitalize(patient?.gender)}
+                  </Typography>
+                  <Typography>
+                    <b>Estado Civil:</b> {capitalize(patient?.maritalStatus)}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              justifyContent={'space-between'}
+              marginBottom={1}>
+              <div style={{display: 'flex', alignItems: 'center', width: '30%', }}>
+                <PersonPinSharpIcon sx={{ width: 25, height: 25, marginRight: 1 }} />
+                <Typography>Responsável</Typography>
+              </div>
+              <div style={{display: 'flex', alignItems: 'center' }}>
+                <Link href={'/paciente/edicao/' + patient?.id}>
+                  <Button
+                    variant='contained'
+                    size={'small'}
+                    style={{ fontWeight: 'bold', marginRight: '10px' }}
+                    color={'success'}>
+                    Perfil
+                  </Button>
+                </Link>
+              </div>
+            </Grid>
+            <Divider sx={{ marginBottom: 2 }} />
+            <Grid
+              id="info-pessoal-responsavel"
+              container
+              justifyContent={'space-around'}
+              marginBottom={5}>
+              <Grid
+                item
+                flexGrow={1}>
+                {patient?.avatar ? (
+                  <Avatar
+                    sx={{ width: 120, height: 120 }}
+                    alt={patient?.name}
+                    src="/static/images/avatar/1.jpg"
+                  />
+                ) : (
+                  <Avatar sx={{ width: 120, height: 120 }}>
+                    <Typography variant={'h2'}>
+                      {patient?.responsible?.name ? patient.responsible.name.split(' ')[0][0] + patient.responsible.name.split(' ')[1][0] : ''}
+                    </Typography>
+                  </Avatar>
+                )}
+              </Grid>
+              <Grid
+                item
+                flexGrow={10}
+                alignItems={'flex-start'}>
+                <Grid
+                  container
+                  justifyContent={'start'}
+                  flexDirection={'column'}>
+                  <Typography>
+                    <b>Nome:</b> {patient?.responsible?.name}
+                  </Typography>
+                  <Typography>
+                    <b>Nascimento:</b> {moment(patient?.responsible?.birthDate).format('DD/MM/YYYY')}
+                  </Typography>
+                  <Typography>
+                    <b>CPF:</b> {formataCpf(patient?.responsible?.cpf)}
+                  </Typography>
+                  <Typography>
+                    <b>Sexo:</b> {capitalize(patient?.responsible?.gender)}
+                  </Typography>
+                  <Typography>
+                    <b>Estado Civil:</b> {capitalize(patient?.responsible?.maritalStatus)}
+                  </Typography>
+                  <Typography>
+                    <b>E-mail:</b> {patient?.responsible?.email?.toLowerCase()}
+                  </Typography>
+                  <Typography>
+                    <b>Telefone:</b> {patient?.responsible?.phone}
+                  </Typography>
+                  <Typography>
+                    <b>Endereço:</b> {patient?.responsible?.address}
                   </Typography>
                 </Grid>
               </Grid>
