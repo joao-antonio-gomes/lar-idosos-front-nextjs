@@ -65,7 +65,7 @@ function PacienteCadastro() {
     PatientService.create(data)
       .then((response) => {
         snackbar.showSnackBar('Paciente cadastrado com sucesso', 'success');
-        router.push('/paciente');
+        router.push(`/paciente/${response.id}`);
       })
       .catch(({ response }) => {
         if (response.status === 400) {

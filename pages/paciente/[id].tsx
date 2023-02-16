@@ -17,11 +17,13 @@ import Link from 'next/link';
 import Patient from '../../src/interface/Patient';
 import ConfirmDialog from '../../src/components/confirmDialog';
 import { capitalize, formataCpf } from '../../src/service/Utils';
+import TreatmentCard from '../../src/components/treatmentCard';
+import TreatmentGet from '../../src/interface/TreatmentGet';
 
 function PacientePerfil() {
   const router = useRouter();
   const [patient, setPatient] = useState<Patient>();
-  const [treatments, setTreatments] = useState([]);
+  const [treatments, setTreatments] = useState<TreatmentGet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const snackbar = useSnackbar();
   const [openModalTreatment, setOpenModalTreatment] = useState(false);
@@ -34,7 +36,7 @@ function PacientePerfil() {
     PatientService.delete(patient?.id)
       .then((response) => {
         snackbar.showSnackBar('Paciente excluído com sucesso', 'success');
-        router.push('/paciente');
+        router.push(`/paciente/`);
       })
       .catch(({ response }) => {
         if (response.data.message) {
@@ -288,11 +290,11 @@ function PacientePerfil() {
               }}>
               <AddIcon />
             </IconButton>
-            {/*<div className="mt-5 flex overflow-x-auto w-full p-5 space-x-5">*/}
-            {/*  {treatments.length > 0*/}
-            {/*    ? treatments.map((treatment) => <TreatmentCard treatment={treatment} />)*/}
-            {/*    : 'Nenhum tratamento para esse paciente.'}*/}
-            {/*</div>*/}
+            <div className="mt-5 flex overflow-x-auto w-full p-5 space-x-5">
+              {treatments.length > 0
+                ? treatments.map((treatment) => <TreatmentCard treatment={treatment} />)
+                : 'Nenhum tratamento para esse paciente.'}
+            </div>
           </>
         )}
         {openModalTreatment && (

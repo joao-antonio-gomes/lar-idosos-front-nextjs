@@ -139,11 +139,10 @@ export const FormPatientEdicao = () => {
         id: data.responsible?.value ? Number(data.responsible.value) : undefined,
       }
     }
-    console.log(patient);
     PatientService.patch(data.id, patient)
       .then((response) => {
         snackbar.showSnackBar('Paciente atualizado com sucesso', 'success');
-        router.push('/paciente');
+        router.push(`/paciente/${patient.id}`);
       })
       .catch(({ response }) => {
         if (response.status === 400) {

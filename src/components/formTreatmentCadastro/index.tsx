@@ -17,7 +17,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import TreatmentService from '../../service/TreatmentService';
 import { TimePickerApp } from '../timePickerApp';
 import dayjs from 'dayjs';
-import DiseaseGet from '../../interface/Disease';
+import DiseaseGet from '../../interface/DiseaseGet';
 import moment from 'moment';
 
 interface Props {
@@ -46,7 +46,7 @@ function FormTreatmentCadastro({ patient, handleClose }: Props) {
       Yup.object().shape({
         medicine: Yup.object().required('Remédio é obrigatório').nullable(),
         dosage: Yup.number().required('Dosagem é obrigatório').typeError('Dosagem deve ser um número inteiro!'),
-        hourInterval: Yup.number()
+        minutesInterval: Yup.number()
           .required('Intervalo (minutos) é obrigatório')
           .typeError('Intervalo (minutos) deve ser um número inteiro!'),
         beginHour: Yup.string().nullable()
@@ -92,7 +92,6 @@ function FormTreatmentCadastro({ patient, handleClose }: Props) {
     TreatmentService.create(data)
       .then((response) => {
         snackbar.showSnackBar('Tratamento criado com sucesso', 'success');
-        return;
         handleClose();
       })
       .catch(({ response }) => {
@@ -137,7 +136,7 @@ function FormTreatmentCadastro({ patient, handleClose }: Props) {
   useEffect(() => {
     fetchMedicines(undefined);
     fetchDiseases(undefined);
-  }, []);
+  }, [fields]);
 
   useEffect(() => {
     if (!medicinesOptions || !diseaseOptions) return;
@@ -147,7 +146,7 @@ function FormTreatmentCadastro({ patient, handleClose }: Props) {
   const appendRemedio = () => {
     append({
       medicine: '',
-      hourInterval: '',
+      minutesInterval: '',
       dosage: '',
     });
   };
@@ -240,7 +239,7 @@ function FormTreatmentCadastro({ patient, handleClose }: Props) {
                   <div className={'mb-5 w-full md:mr-2.5'}>
                     <InputText
                       label={'Intervalo (minutos)'}
-                      name={`treatmentMedicines.${index}.hourInterval`}
+                      name={`treatmentMedicines.${index}.minutesInterval`}
                       propsInput={{ type: 'number' }}
                       control={control}
                     />

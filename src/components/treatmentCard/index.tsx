@@ -3,21 +3,22 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import moment from 'moment';
-import Divider from '@mui/material/Divider';
-import Medicine from '../../interface/Medicine';
+import TreatmentGet from '../../interface/TreatmentGet';
+import { TreatmentStatus } from '../../interface/TreatmentStatus';
+import { Chip } from '@mui/material';
 
 interface Props {
-  treatment: any;
+  treatment: TreatmentGet;
 }
 
 export default function TreatmentCard({ treatment }: Props) {
   return (
-    <Card sx={{ width: 250, height: 220 }}>
+    <Card sx={{ width: 250, height: 130 }}>
       <CardContent>
         <Typography
           variant="h5"
           component="div">
-          {treatment.disease}
+          {treatment.disease.name}
         </Typography>
         <Typography
           sx={{ fontSize: 14 }}
@@ -26,23 +27,8 @@ export default function TreatmentCard({ treatment }: Props) {
           {moment(treatment.beginDate).format('DD/MM/YYYY')} - {moment(treatment.endDate).format('DD/MM/YYYY')}
         </Typography>
         <div className="mt-3 overflow-y-auto h-32">
-          {treatment.medsTreatment.length > 0 ? (
-            treatment.medsTreatment.map((med: any, index: number) => (
-              <>
-                <Divider />
-                <Typography
-                  variant="body2"
-                  className="py-1">
-                  {med.medicine.name} - {med.medicine.concentration}mg
-                  <br />
-                  {med.dosage} {med.dosageType} - A cada {med.hourInterval} horas
-                </Typography>
-                {index === treatment.medsTreatment.length - 1 ? <Divider /> : ''}
-              </>
-            ))
-          ) : (
-            <Typography variant="body2">Sem medicamentos para esse tratamento.</Typography>
-          )}
+          {/*@ts-ignore*/}
+          <Chip label={TreatmentStatus[treatment.status].name} color={TreatmentStatus[treatment.status].color} />
         </div>
       </CardContent>
     </Card>
