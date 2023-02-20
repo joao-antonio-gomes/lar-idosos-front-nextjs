@@ -3,11 +3,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PatientService from '../../src/service/PatientService';
 import { Button, Container, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
-import { useSnackbar } from '../../src/context/snackbar';
 import TableApp from '../../src/components/tableApp/index';
 import Patient from '../../src/interface/Patient';
 import DataPageable from '../../src/interface/DataPageable';
-import PageableFilter from '../../src/interface/PageableFilter';
+import PageableFilter from '../../src/interface/Pageable';
 import TableColumn from '../../src/interface/TableColumn';
 
 const PacienteListagem = () => {
@@ -54,7 +53,6 @@ const PacienteListagem = () => {
       }
     }
   ];
-  const snackbar = useSnackbar();
 
   const fetchData = useCallback(() => {
     PatientService.getAll(patientFilter).then(({ data }) => {

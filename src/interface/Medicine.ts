@@ -3,6 +3,6 @@ export default interface Medicine {
   name: string;
   description: string;
   concentration: number;
-  stock_quantity: number;
+  stockQuantity: number;
   type: string;
 }

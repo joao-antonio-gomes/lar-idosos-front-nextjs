@@ -6,7 +6,7 @@ import ConfirmDialog from '../../src/components/confirmDialog';
 import MedicineService from '../../src/service/MedicineService';
 import Typography from '@mui/material/Typography';
 import DataPageable from '../../src/interface/DataPageable';
-import PageableFilter from '../../src/interface/PageableFilter';
+import PageableFilter from '../../src/interface/Pageable';
 import TableColumn from '../../src/interface/TableColumn';
 import Medicine from '../../src/interface/Medicine';
 import TableApp from '../../src/components/tableApp';

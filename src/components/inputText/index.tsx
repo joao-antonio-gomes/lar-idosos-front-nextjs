@@ -20,12 +20,12 @@ export function InputText({ label, name, control, defaultValue, propsInput, help
       render={({ field, fieldState: { error } }) => {
         return (
           <TextField
+            {...propsInput}
+            {...field}
             className={'w-full'}
             id="outlined-basic"
             label={label}
-            {...propsInput}
             variant="outlined"
-            {...field}
             error={!!error}
             helperText={error ? error.message : helperText ? helperText : null}
           />

@@ -15,7 +15,9 @@ interface Props {
   control: Control<any, any>;
 }
 
-export function TimePickerApp({ label, control, name }: Props) {
+export function TimePickerApp({
+                                propsInput, label, control, name
+                              }: Props) {
   return (
     <>
       <Controller
@@ -26,14 +28,14 @@ export function TimePickerApp({ label, control, name }: Props) {
           return (
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <TimePicker
+                {...propsInput}
                 className={'w-full'}
                 label={label}
-                value={value}
+                value={dayjs(value, 'HH:mm')}
                 ampm={false}
                 ampmInClock={false}
-                onChange={(value) => {
-                  onChange(dayjs(value).format('HH:mm:ss'));
-                }}
+                // @ts-ignore
+                onChange={(value) => onChange(dayjs(value, 'HH:mm'))}
                 renderInput={(params) => (
                   <TextField
                     {...params}

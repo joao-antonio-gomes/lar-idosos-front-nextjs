@@ -5,11 +5,12 @@ import { TextField } from '@mui/material';
 interface Props {
   mask: string;
   control: any;
+  propsInput?: any;
   name: string;
   label: string;
 }
 
-export function InputMaskApp({ mask, name, label, control }: Props) {
+export function InputMaskApp({ mask, name, label, control, propsInput }: Props) {
   return (
     <Controller
       name={name}
@@ -19,6 +20,7 @@ export function InputMaskApp({ mask, name, label, control }: Props) {
         return (
           <InputMask
             mask={mask}
+            {...propsInput}
             {...field}>
             <TextField
               className={'w-full'}

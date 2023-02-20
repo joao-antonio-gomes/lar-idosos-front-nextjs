@@ -19,7 +19,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import PersonService from '../../service/PersonService';
 import PatientService from '../../service/PatientService';
 import Patient from '../../interface/Patient';
-import { AxiosResponse } from 'axios';
 import SelectOption from '../../interface/SelectOption';
 
 export const FormPatientEdicao = () => {
@@ -79,22 +78,6 @@ export const FormPatientEdicao = () => {
     fetchAllResponsible(value);
   }
 
-  function fetchDefaultResponsible(patient: Patient, response: AxiosResponse<any>) {
-    if (!patient || !patient.responsible) return;
-
-    UserService.getResponsibleById(patient.responsible?.id).then(({ data }) => {
-      const responsible: SelectOption = {
-        value: Number(data.id),
-        label: data.name
-      };
-
-      setInitialValues({
-      ...patient,
-          responsible: responsible
-      });
-    });
-  }
-
   function mountResponsible(patient: Patient): SelectOption | undefined {
     if (!patient || !patient.responsible) return;
 
@@ -140,7 +123,7 @@ export const FormPatientEdicao = () => {
       }
     }
     PatientService.patch(data.id, patient)
-      .then((response) => {
+      .then(() => {
         snackbar.showSnackBar('Paciente atualizado com sucesso', 'success');
         router.push(`/paciente/${patient.id}`);
       })

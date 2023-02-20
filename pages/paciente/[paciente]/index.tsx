@@ -1,10 +1,10 @@
-import { Avatar, Button, Container, Grid, Popover } from '@mui/material';
+import { Avatar, Button, Chip, Container, Grid, Popover } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import PatientService from '../../src/service/PatientService';
+import PatientService from '../../../src/service/PatientService';
 import { useRouter } from 'next/router';
-import Loader from '../../src/components/loader';
-import { useSnackbar } from '../../src/context/snackbar';
-import PrevPage from '../../src/components/prevPage';
+import Loader from '../../../src/components/loader';
+import { useSnackbar } from '../../../src/context/snackbar';
+import PrevPage from '../../../src/components/prevPage';
 import PersonPinSharpIcon from '@mui/icons-material/PersonPinSharp';
 import VaccinesSharpIcon from '@mui/icons-material/VaccinesSharp';
 import AddIcon from '@mui/icons-material/Add';
@@ -12,20 +12,25 @@ import Typography from '@mui/material/Typography';
 import moment from 'moment';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import TreatmentDialog from '../../src/components/treatmentDialog';
+import TreatmentDialog from '../../../src/components/treatmentDialog';
 import Link from 'next/link';
-import Patient from '../../src/interface/Patient';
-import ConfirmDialog from '../../src/components/confirmDialog';
-import { capitalize, formataCpf } from '../../src/service/Utils';
-import TreatmentCard from '../../src/components/treatmentCard';
-import TreatmentGet from '../../src/interface/TreatmentGet';
+import Patient from '../../../src/interface/Patient';
+import ConfirmDialog from '../../../src/components/confirmDialog';
+import { capitalize, formataCpf } from '../../../src/service/Utils';
+import TableApp from '../../../src/components/tableApp';
+import TableColumn from '../../../src/interface/TableColumn';
+import { TreatmentStatus } from '../../../src/interface/TreatmentStatus';
+import DataPageable from '../../../src/interface/DataPageable';
+import PageableFilter from '../../../src/interface/Pageable';
+import TreatmentGet from '../../../src/interface/TreatmentGet';
 
 function PacientePerfil() {
   const router = useRouter();
-  const [patient, setPatient] = useState<Patient>();
-  const [treatments, setTreatments] = useState<TreatmentGet[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const snackbar = useSnackbar();
+  const [patient, setPatient] = useState<Patient>();
+  const [treatments, setTreatments] = useState<DataPageable>();
+  const [treatmentFilter, setTreatmentFilter] = useState<PageableFilter>({ page: 0, size: 10, name: undefined, sort: 'id' });
+  const [isLoading, setIsLoading] = useState(true);
   const [openModalTreatment, setOpenModalTreatment] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [openModalDeletePatient, setOpenModalDeletePatient] = useState(false);
@@ -33,8 +38,9 @@ function PacientePerfil() {
   const openPopover = Boolean(anchorEl);
 
   const handleDeletePatient = (patient: Patient | undefined) => {
-    PatientService.delete(patient?.id)
-      .then((response) => {
+    if (!patient) return;
+    PatientService.delete(patient.id)
+      .then(() => {
         snackbar.showSnackBar('Paciente excluído com sucesso', 'success');
         router.push(`/paciente/`);
       })
@@ -64,25 +70,97 @@ function PacientePerfil() {
     setAnchorEl(null);
   };
 
+  const fetchPatientData = async (id: number) => {
+    await PatientService.getById(id)
+      .then(({ data }) => {
+        setPatient(data);
+      })
+      .catch(() =>
+        snackbar.showSnackBar('Houve um erro ao carregar os dados, atualize a página e tente novamente', 'error')
+      )
+
+    await PatientService.getTreatments(id, treatmentFilter)
+      .then(({ data }) => {
+        setTreatments(data);
+      })
+      .catch(() =>
+        snackbar.showSnackBar('Houve um erro ao carregar os dados, atualize a página e tente novamente', 'error')
+      )
+      .finally(() => setIsLoading(false));
+  }
+
+  const treatmentColumns: TableColumn[] = [
+    {
+      field: 'status',
+      headerName: 'Status',
+      sortable: true,
+      valueGetter: (treatment: TreatmentGet) => {
+        if (!treatment || !treatment.status) {
+          return '';
+        }
+
+        // @ts-ignore
+        return <Chip label={TreatmentStatus[treatment.status].name} color={TreatmentStatus[treatment.status].color} />;
+      }
+    },
+    {
+      field: 'disease',
+      headerName: 'Doença',
+      sortable: true,
+      valueGetter: (treatment: TreatmentGet) => {
+        if (!treatment || !treatment.status) {
+          return '';
+        }
+
+        return treatment.disease.name;
+      }
+    },
+    {
+      field: 'beginDate',
+      headerName: 'Data de início',
+      sortable: true,
+      valueGetter: (treatment: TreatmentGet) => moment(treatment.beginDate).format('DD/MM/YYYY')
+    },
+    {
+      field: 'endDate',
+      headerName: 'Data final',
+      sortable: true,
+      valueGetter: (treatment: TreatmentGet) => moment(treatment.endDate).format('DD/MM/YYYY')
+    },
+    {
+      field: 'actions',
+      headerName: 'Ações',
+      width: 120,
+      sortable: false,
+      valueGetter: (treatment: TreatmentGet) => {
+        return (
+          <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+            <Link href={`/paciente/${patient?.id}/tratamento/${treatment.id}`}>
+              <Button
+                variant='contained'
+                size={'small'}
+                style={{ fontWeight: 'bold' }}
+                color={'info'}>
+                Detalhes
+              </Button>
+            </Link>
+          </div>
+        );
+      }
+    }
+  ];
+
+  const handlePageChangeTreatment = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    setTreatmentFilter({ ...treatmentFilter, page: newPage });
+  };
+
   useEffect(() => {
     if (router.isReady) {
-      const { id } = router.query;
+      const { paciente: id } = router.query;
       setIsLoading(true);
-      PatientService.getById(id)
-        .then(({ data }) => {
-          setPatient(data);
-          setTreatments(data.treatments);
-        })
-        .catch((error) =>
-          snackbar.showSnackBar('Houve um erro ao carregar os dados, atualize a página e tente novamente', 'error')
-        )
-        .finally(() => setIsLoading(false));
+      fetchPatientData(Number(id));
     }
-  }, [router.isReady]);
-
-  if (isLoading && !patient) {
-    return <Loader />;
-  }
+  }, [router.isReady, treatmentFilter]);
 
   return (
     <>
@@ -290,11 +368,13 @@ function PacientePerfil() {
               }}>
               <AddIcon />
             </IconButton>
-            <div className="mt-5 flex overflow-x-auto w-full p-5 space-x-5">
-              {treatments.length > 0
-                ? treatments.map((treatment) => <TreatmentCard treatment={treatment} />)
-                : 'Nenhum tratamento para esse paciente.'}
-            </div>
+            <div className='mt-5'></div>
+            <TableApp columns={treatmentColumns}
+                      content={treatments?.content ?? [{}]}
+                      count={treatments?.totalElements ?? 0}
+                      page={treatments?.pageable.pageNumber ?? 0}
+                      noContentText={'Nenhum tratamento para esse paciente.'}
+                      handlePageChange={handlePageChangeTreatment} />
           </>
         )}
         {openModalTreatment && (

@@ -11,15 +11,24 @@ interface Props {
   name: string;
   helperText?: string;
   defaultValue?: string;
-  propsInput?: any;
   control: Control<any, any>;
   minDate?: Date;
   maxDate?: Date;
   disableFuture?: boolean;
   openTo?: 'day' | 'month' | 'year';
+  propsInput?: any;
 }
 
-export function DatePickerApp({ label, control, name, minDate, maxDate, disableFuture = true, openTo = 'year' }: Props) {
+export function DatePickerApp({
+                                propsInput,
+                                label,
+                                control,
+                                name,
+                                minDate,
+                                maxDate,
+                                disableFuture = true,
+                                openTo = 'year'
+                              }: Props) {
   return (
     <>
       <Controller
@@ -30,6 +39,7 @@ export function DatePickerApp({ label, control, name, minDate, maxDate, disableF
           return (
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
+                {...propsInput}
                 className={'w-full'}
                 disableFuture={disableFuture}
                 label={label}
@@ -39,6 +49,7 @@ export function DatePickerApp({ label, control, name, minDate, maxDate, disableF
                 minDate={maxDate}
                 mask={'__/__/____'}
                 value={value}
+                // @ts-ignore
                 onChange={(value) => onChange(dayjs(value))}
                 renderInput={(params) => (
                   <TextField

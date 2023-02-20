@@ -13,7 +13,7 @@ interface Props {
 
 export default function TreatmentCard({ treatment }: Props) {
   return (
-    <Card sx={{ width: 250, height: 130 }}>
+    <Card sx={{ width: '250px', height: 130, marginRight: 5, flexShrink: 0 }}>
       <CardContent>
         <Typography
           variant="h5"
