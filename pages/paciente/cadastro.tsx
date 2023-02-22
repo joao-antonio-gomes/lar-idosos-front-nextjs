@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { FormPatientCadastro } from '../../src/components/formPatientCadastro';
 import { validateBr } from 'js-brasil';
 import Enum from '../../src/interface/Enum';
+import Patient from '../../src/interface/Patient';
 
 function PacienteCadastro() {
   const [genderList, setGenderList] = useState<Enum[]>([]);
@@ -64,8 +65,9 @@ function PacienteCadastro() {
     }
     PatientService.create(data)
       .then((response) => {
+        const patient: Patient = response.data;
         snackbar.showSnackBar('Paciente cadastrado com sucesso', 'success');
-        router.push(`/paciente/${response.id}`);
+        router.push(`/paciente/${patient.id}`);
       })
       .catch(({ response }) => {
         if (response.status === 400) {
