@@ -3,21 +3,17 @@ import { useEffect, useState } from 'react';
 import Loader from '../../../../../src/components/loader';
 import { useSnackbar } from '../../../../../src/context/snackbar';
 import { useRouter } from 'next/router';
-import Patient from '../../../../../src/interface/Patient';
 import PrevPage from '../../../../../src/components/prevPage';
 import TreatmentService from '../../../../../src/service/TreatmentService';
 import { useForm } from 'react-hook-form';
-import { capitalize } from '../../../../../src/service/Utils';
 import { InputText } from '../../../../../src/components/inputText';
 import { DatePickerApp } from '../../../../../src/components/datePickerApp';
 import { InputMaskApp } from '../../../../../src/components/inputMaskApp';
 import PersonPinSharpIcon from '@mui/icons-material/PersonPinSharp';
 import VaccinesSharpIcon from '@mui/icons-material/VaccinesSharp';
-import MedicationLiquidSharpIcon from '@mui/icons-material/MedicationLiquidSharp';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import TreatmentCompleteGet from '../../../../../src/interface/TreatmentCompleteGet';
-import { TimePickerApp } from '../../../../../src/components/timePickerApp';
 import FormTreatmentMedicineEdicao from '../../../../../src/components/formTreatmentMedicineEdicao';
 
 function TratamentoDetalhe() {
@@ -25,16 +21,14 @@ function TratamentoDetalhe() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [patientId, setPatientId] = useState('');
-  const [patient, setPatient] = useState<Patient>();
   const [treatment, setTreatment] = useState<TreatmentCompleteGet>();
   const [isEdicaoBlocked, setIsEdicaoBlocked] = useState(true);
 
   /** form **/
-  const { handleSubmit, control, reset } = useForm({});
+  const { control, reset } = useForm({});
 
-  const fetchData = async (tratamentoId: string | undefined) => {
+  const fetchData = async (tratamentoId: number) => {
     await TreatmentService.getById(tratamentoId).then(({ data }) => {
-      setPatient(data.patient);
       setTreatment(data);
       reset(data);
     }).catch(() => {
@@ -49,7 +43,8 @@ function TratamentoDetalhe() {
       const { paciente: pacienteId, tratamento: tratamentoId } = router.query;
       setPatientId(pacienteId?.[0] ?? '');
       setIsLoading(true);
-      fetchData(tratamentoId?.[0]);
+      if (!tratamentoId) return;
+      fetchData(Number(tratamentoId[0]));
     }
   }, [router.isReady]);
 

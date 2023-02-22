@@ -95,7 +95,7 @@ export const FormPatientEdicao = () => {
     fetchAllResponsible('');
     PersonService.getGender().then(({ data }) => setGenderList(data));
     PersonService.getMaritalStatus().then(({ data }) => setMaritalStatusList(data));
-    PatientService.getById(id).then((response) => {
+    PatientService.getById(Number(id)).then((response) => {
       const patient: Patient = response.data;
 
       setInitialValues({

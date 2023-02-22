@@ -1,12 +1,12 @@
-import { api } from './api';
+import { apiLarIdosos } from './apiLarIdosos';
 
 class TreatmentService {
   static create(data: any) {
-    return api.post(`/treatments`, data);
+    return apiLarIdosos.post(`/treatments`, data);
   }
 
   static getById(tratamentoId: number) {
-    return api.get(`/treatments/${tratamentoId}`);
+    return apiLarIdosos.get(`/treatments/${tratamentoId}`);
   }
 }
 

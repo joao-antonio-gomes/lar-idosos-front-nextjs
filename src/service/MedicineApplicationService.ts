@@ -1,12 +1,12 @@
-import { api } from './api';
+import { apiLarIdosos } from './apiLarIdosos';
 
 class MedicineApplicationService {
   static apply(id: number) {
-    return api.patch(`/medicine-applications/${id}/apply`);
+    return apiLarIdosos.patch(`/medicine-applications/${id}/apply`);
   }
 
   static unapply(id: number) {
-    return api.patch(`/medicine-applications/${id}/unapply`);
+    return apiLarIdosos.patch(`/medicine-applications/${id}/unapply`);
   }
 }
 

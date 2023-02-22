@@ -1,25 +1,25 @@
-import { api } from './api';
+import { apiLarIdosos } from './apiLarIdosos';
 import Pageable from '../interface/Pageable';
 
 class DiseaseService {
   static getAll(params: Pageable) {
-    return api.get('/diseases', { params: { ...params } });
+    return apiLarIdosos.get('/diseases', { params: { ...params } });
   }
 
   static getById(patientId: number) {
-    return api.get(`/diseases/${patientId}`);
+    return apiLarIdosos.get(`/diseases/${patientId}`);
   }
 
   static create(data: any) {
-    return api.post(`/diseases/`, data);
+    return apiLarIdosos.post(`/diseases/`, data);
   }
 
   static patch(data: any) {
-    return api.patch(`/diseases/`, data);
+    return apiLarIdosos.patch(`/diseases/`, data);
   }
 
   static delete(patientId: number) {
-    return api.delete(`/diseases/${patientId}`);
+    return apiLarIdosos.delete(`/diseases/${patientId}`);
   }
 
 }

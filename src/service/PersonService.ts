@@ -1,12 +1,12 @@
-import { api } from './api';
+import { apiLarIdosos } from './apiLarIdosos';
 
 class PersonService {
   static getGender() {
-    return api.get('/persons/genders');
+    return apiLarIdosos.get('/persons/genders');
   }
 
   static getMaritalStatus() {
-    return api.get('/persons/marital-status');
+    return apiLarIdosos.get('/persons/marital-status');
   }
 }
 

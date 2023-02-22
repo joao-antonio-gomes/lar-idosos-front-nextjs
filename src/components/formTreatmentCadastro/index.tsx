@@ -82,13 +82,19 @@ function FormTreatmentCadastro({ patient, handleClose }: Props) {
     console.log(data);
     data = {
       ...data,
+      beginDate: moment(data.beginDate).format('YYYY-MM-DD'),
+      endDate: moment(data.endDate).format('YYYY-MM-DD'),
       diseaseId: data.disease?.value,
       patientId: patient?.id,
       treatmentMedicines: data.treatmentMedicines.map((medicine: any) => ({
         ...medicine,
         medicineId: medicine.medicine?.value,
+        beginDate: moment(data.beginDate).format('YYYY-MM-DD'),
+        endDate: moment(data.endDate).format('YYYY-MM-DD'),
+        beginHour: moment(medicine.beginHour).format('HH:mm'),
       }))
     };
+    console.log(data);
     TreatmentService.create(data)
       .then((response) => {
         snackbar.showSnackBar('Tratamento criado com sucesso', 'success');
