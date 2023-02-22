@@ -12,7 +12,7 @@ interface Props {
   helperText?: string;
   defaultValue?: string;
   propsInput?: any;
-  control: Control<any, any>;
+  control: Control<any>;
 }
 
 export function TimePickerApp({

@@ -11,7 +11,7 @@ interface Props {
   name: string;
   helperText?: string;
   defaultValue?: string;
-  control: Control<any, any>;
+  control: Control<any>;
   minDate?: Date;
   maxDate?: Date;
   disableFuture?: boolean;

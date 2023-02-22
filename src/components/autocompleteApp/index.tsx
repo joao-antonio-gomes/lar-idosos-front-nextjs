@@ -9,7 +9,7 @@ interface Props {
   label: string;
   name: string;
   options: SelectOption[];
-  control: Control<any, any>;
+  control: Control<any>;
   onInputChange: (e: React.SyntheticEvent<Element, Event>, value: string) => void;
 }
 

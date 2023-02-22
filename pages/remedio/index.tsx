@@ -72,8 +72,9 @@ function RemediosListagem() {
   };
 
   const handleDeleteMedicine = (medicine: Medicine | undefined) => {
-    MedicineService.delete(medicine?.id)
-      .then((response) => {
+    if (!medicine) return;
+    MedicineService.delete(medicine.id)
+      .then(() => {
         snackbar.showSnackBar('Remédio excluído com sucesso', 'success');
         fetchData();
       })

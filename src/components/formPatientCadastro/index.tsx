@@ -22,8 +22,7 @@ export const FormPatientCadastro = ({ onSubmit, useForm, genderList, maritalStat
   const maxDate = dayjs().subtract(110, 'years').toDate();
 
   const {
-    control,
-    formState: { errors },
+    control
   } = useForm;
 
   const [responsableOptions, setResponsableOptions] = useState([]);

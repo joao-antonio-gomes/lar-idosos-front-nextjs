@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const FormMedicine = ({ onSubmit, useForm }: Props) => {
-  const { register, control, reset } = useForm;
+  const { control } = useForm;
 
   return (
     <form onSubmit={onSubmit}>

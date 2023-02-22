@@ -6,7 +6,7 @@ interface Props {
   label: string;
   name: string;
   options: { label: string, value: string }[];
-  control: Control<any, any>;
+  control: Control<any>;
   defaultValue?: string;
 }
 

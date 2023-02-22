@@ -29,7 +29,7 @@ function RemedioCadastro() {
   const onSubmit = handleSubmit((data) => {
     console.log(data);
     MedicineService.create(data)
-      .then((response) => {
+      .then(() => {
         snackbar.showSnackBar('Remédio cadastrado com sucesso', 'success');
         router.push('/remedio');
       })

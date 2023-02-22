@@ -96,7 +96,7 @@ function FormTreatmentCadastro({ patient, handleClose }: Props) {
     };
     console.log(data);
     TreatmentService.create(data)
-      .then((response) => {
+      .then(() => {
         snackbar.showSnackBar('Tratamento criado com sucesso', 'success');
         handleClose();
       })

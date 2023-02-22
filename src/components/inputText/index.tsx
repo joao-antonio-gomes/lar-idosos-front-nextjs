@@ -8,7 +8,7 @@ interface Props {
   helperText?: string;
   defaultValue?: string;
   propsInput?: any;
-  control: Control<any, any>;
+  control: Control<any>;
 }
 
 export function InputText({ label, name, control, defaultValue, propsInput, helperText }: Props) {

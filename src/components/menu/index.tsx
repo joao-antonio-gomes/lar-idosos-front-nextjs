@@ -19,7 +19,6 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuItems from '../../service/MenuItems';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ReactElement, ReactNode } from 'react';
 
 const drawerWidth = 240;
 
