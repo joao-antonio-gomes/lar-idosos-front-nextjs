@@ -1,5 +1,5 @@
 import { Container, Typography } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { FieldValues, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import dayjs from 'dayjs';
@@ -56,12 +56,14 @@ function PacienteCadastro() {
     resolver: yupResolver(validationSchema)
   });
 
+  function buildResponsible(data: FieldValues) {
+      return data.responsible?.value ? {id: Number(data.responsible.value)} : undefined;
+  }
+
   const onSubmit = handleSubmit((data) => {
     data = {
       ...data,
-      responsible: {
-        id: data.responsible?.value ? Number(data.responsible.value) : undefined,
-      }
+      responsible: buildResponsible(data),
     }
     PatientService.create(data)
       .then((response) => {
