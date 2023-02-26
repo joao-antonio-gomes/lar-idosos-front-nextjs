@@ -1,4 +1,4 @@
-export default interface DiseaseGet {
+export default interface Disease {
   id: number;
   name: string;
   observation: string;

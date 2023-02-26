@@ -22,7 +22,7 @@ import TableColumn from '../../../src/interface/TableColumn';
 import { TreatmentStatus } from '../../../src/interface/TreatmentStatus';
 import DataPageable from '../../../src/interface/DataPageable';
 import PageableFilter from '../../../src/interface/Pageable';
-import TreatmentGet from '../../../src/interface/TreatmentGet';
+import Treatment from '../../../src/interface/Treatment';
 
 function PacientePerfil() {
   const router = useRouter();
@@ -94,7 +94,7 @@ function PacientePerfil() {
       field: 'status',
       headerName: 'Status',
       sortable: true,
-      valueGetter: (treatment: TreatmentGet) => {
+      valueGetter: (treatment: Treatment) => {
         if (!treatment || !treatment.status) {
           return '';
         }
@@ -107,7 +107,7 @@ function PacientePerfil() {
       field: 'disease',
       headerName: 'Doença',
       sortable: true,
-      valueGetter: (treatment: TreatmentGet) => {
+      valueGetter: (treatment: Treatment) => {
         if (!treatment || !treatment.status) {
           return '';
         }
@@ -119,20 +119,20 @@ function PacientePerfil() {
       field: 'beginDate',
       headerName: 'Data de início',
       sortable: true,
-      valueGetter: (treatment: TreatmentGet) => moment(treatment.beginDate).format('DD/MM/YYYY')
+      valueGetter: (treatment: Treatment) => moment(treatment.beginDate).format('DD/MM/YYYY')
     },
     {
       field: 'endDate',
       headerName: 'Data final',
       sortable: true,
-      valueGetter: (treatment: TreatmentGet) => moment(treatment.endDate).format('DD/MM/YYYY')
+      valueGetter: (treatment: Treatment) => moment(treatment.endDate).format('DD/MM/YYYY')
     },
     {
       field: 'actions',
       headerName: 'Ações',
       width: 120,
       sortable: false,
-      valueGetter: (treatment: TreatmentGet) => {
+      valueGetter: (treatment: Treatment) => {
         return (
           <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
             <Link href={`/paciente/${patient?.id}/tratamento/${treatment.id}`}>

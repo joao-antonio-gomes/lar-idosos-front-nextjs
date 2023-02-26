@@ -1,4 +1,4 @@
-import DiseaseGet from './DiseaseGet';
+import Disease from './Disease';
 import Patient from './Patient';
 import TreatmentMedicines from './TreatmentMedicines';
 
@@ -7,7 +7,7 @@ export default interface TreatmentCompleteGet {
   beginDate: Date;
   endDate: Date;
   status: string;
-  disease: DiseaseGet;
+  disease: Disease;
   patient: Patient;
   treatmentMedicines: TreatmentMedicines[];
 }

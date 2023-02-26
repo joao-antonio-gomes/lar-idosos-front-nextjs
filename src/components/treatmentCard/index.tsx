@@ -3,12 +3,12 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import moment from 'moment';
-import TreatmentGet from '../../interface/TreatmentGet';
+import Treatment from '../../interface/Treatment';
 import { TreatmentStatus } from '../../interface/TreatmentStatus';
 import { Chip } from '@mui/material';
 
 interface Props {
-  treatment: TreatmentGet;
+  treatment: Treatment;
 }
 
 export default function TreatmentCard({ treatment }: Props) {

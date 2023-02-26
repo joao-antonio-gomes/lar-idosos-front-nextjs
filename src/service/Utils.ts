@@ -1,4 +1,4 @@
-function capitalize(string: string|undefined): string {
+function capitalize(string: string | undefined): string {
   if (string === undefined) {
     return '';
   }
@@ -7,7 +7,7 @@ function capitalize(string: string|undefined): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function capitalizeWords(string: string|undefined): string {
+function capitalizeWords(string: string | undefined): string {
   if (string === undefined) {
     return '';
   }
@@ -18,7 +18,21 @@ function capitalizeWords(string: string|undefined): string {
     .join(' ');
 }
 
-function formataCpf(cpf: string|undefined): string {
+function abreviaNomePaciente(nome: string | undefined): string {
+  if (nome === undefined) {
+    return '';
+  }
+
+  const artigos = ['da', 'de', 'do', 'das', 'dos'];
+
+  let nomes = nome.split(' ');
+  nomes = nomes.filter(nome => !artigos.includes(nome.toLowerCase()));
+
+  return nomes[0] + ' ' + nomes[nomes.length - 1].charAt(0) + '.';
+
+}
+
+function formataCpf(cpf: string | undefined): string {
   if (cpf === undefined) {
     return '';
   }
@@ -27,4 +41,4 @@ function formataCpf(cpf: string|undefined): string {
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
 }
 
-export { capitalize, capitalizeWords, formataCpf };
+export { abreviaNomePaciente, capitalize, capitalizeWords, formataCpf };

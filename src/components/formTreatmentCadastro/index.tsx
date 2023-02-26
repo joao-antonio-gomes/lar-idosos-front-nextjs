@@ -17,7 +17,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import TreatmentService from '../../service/TreatmentService';
 import { TimePickerApp } from '../timePickerApp';
 import dayjs from 'dayjs';
-import DiseaseGet from '../../interface/DiseaseGet';
+import Disease from '../../interface/Disease';
 import moment from 'moment';
 
 interface Props {
@@ -126,7 +126,7 @@ function FormTreatmentCadastro({ patient, handleClose }: Props) {
 
   const fetchDiseases = (value: string|undefined) => {
     DiseaseService.getAll({ page: 0, size: 10, name: value, sort: 'name' }).then((response) => {
-      setDiseaseOptions(response.data.content.map((disease: DiseaseGet) => {
+      setDiseaseOptions(response.data.content.map((disease: Disease) => {
         return {
           value: disease.id,
           label: `${disease.name}`
